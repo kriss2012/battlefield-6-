@@ -176,13 +176,40 @@ router.post('/collect', async (req, res) => {
     // Run collection in background
     collectAllTrackedPlayerStats().catch(console.error);
 
-    res.json({
+    return res.json({
       success: true,
       message: 'Stats collection started',
     });
   } catch (error) {
     console.error('Error triggering stats collection:', error);
-    res.status(500).json({ error: 'Failed to trigger stats collection' });
+    return res.status(500).json({ error: 'Failed to trigger stats collection' });
+  }
+});
+
+// Autocomplete for player names
+router.get('/autocomplete', async (req, res) => {
+  try {
+    const { query, limit = 10 } = req.query;
+
+    if (!query) {
+      return res.json({ suggestions: [] });
+    }
+
+    const result = await pool.query(
+      `SELECT player_name as name, player_id as id, platform
+       FROM tracked_players
+       WHERE player_name ILIKE $1
+       ORDER BY player_name ASC
+       LIMIT $2`,
+      [`%${query}%`, parseInt(limit as string)]
+    );
+
+    return res.json({
+      suggestions: result.rows,
+    });
+  } catch (error) {
+    console.error('Error in autocomplete:', error);
+    return res.status(500).json({ error: 'Failed to fetch suggestions' });
   }
 });
 
