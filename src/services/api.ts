@@ -165,6 +165,18 @@ export const analyticsApi = {
       return { error: error instanceof Error ? error.message : 'An error occurred' };
     }
   },
+
+  // Global autocomplete
+  getAutocomplete: async (query: string) => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/stats/autocomplete?query=${encodeURIComponent(query)}`);
+      if (!response.ok) throw new Error('Failed to fetch autocomplete suggestions');
+      return await response.json();
+    } catch (error) {
+      console.error('Analytics API Error:', error);
+      return { error: error instanceof Error ? error.message : 'An error occurred' };
+    }
+  },
 };
 
 // Leaderboard API
