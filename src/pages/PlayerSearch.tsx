@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Combobox, Transition } from '@headlessui/react';
-import { playerApi } from '../services/api';
+import { playerApi, analyticsApi } from '../services/api';
 import { PlayerCache } from '../utils/playerCache';
+import { PlayerStatsSkeleton } from '../components/Skeleton';
 
 const PLATFORMS = [
   { id: 'all', name: 'All Platforms', icon: '🌐' },
@@ -25,20 +26,36 @@ export default function PlayerSearch() {
   // Load recent searches on mount
   useEffect(() => {
     const recent = PlayerCache.getRecentSearches(5);
-    console.log('Recent searches on mount:', recent);
-    console.log('Total cached players:', PlayerCache.getPlayerCount());
     setRecentSearches(recent);
   }, []);
 
-  // Update suggestions as user types
+  // Update suggestions as user types (local + global)
   useEffect(() => {
-    if (query.length >= 1) {
-      const matches = PlayerCache.searchPlayers(query, 8);
-      console.log('Query:', query, '| Suggestions:', matches);
-      setSuggestions(matches);
-    } else {
-      setSuggestions([]);
-    }
+    const fetchSuggestions = async () => {
+      if (query.trim().length >= 2) {
+        // Get local matches
+        const localMatches = PlayerCache.searchPlayers(query, 5);
+        
+        // Get global matches from backend
+        const response = await analyticsApi.getAutocomplete(query);
+        const globalMatches = response.suggestions || [];
+        
+        // Merge and deduplicate
+        const merged = [...localMatches];
+        globalMatches.forEach((gm: any) => {
+          if (!merged.find(m => m.name.toLowerCase() === gm.name.toLowerCase())) {
+            merged.push({ ...gm, isGlobal: true });
+          }
+        });
+        
+        setSuggestions(merged.slice(0, 10));
+      } else {
+        setSuggestions([]);
+      }
+    };
+
+    const timer = setTimeout(fetchSuggestions, 300);
+    return () => clearTimeout(timer);
   }, [query]);
 
   // Handle player selection from dropdown
@@ -68,12 +85,12 @@ export default function PlayerSearch() {
       setPlayerStats(response.data);
       // Add to cache on successful search
       const platformToCache = selectedPlatform !== 'all' ? selectedPlatform : undefined;
-      console.log('Adding to cache:', playerName, 'platform:', platformToCache);
       PlayerCache.addPlayer(playerName, platformToCache);
       // Refresh recent searches
-      const recent = PlayerCache.getRecentSearches(5);
-      console.log('Updated recent searches:', recent);
-      setRecentSearches(recent);
+      setRecentSearches(PlayerCache.getRecentSearches(5));
+      
+      // Also track this player on our backend for future global autocomplete
+      analyticsApi.trackPlayer(playerName, playerName, selectedPlatform).catch(() => {});
     }
 
     setLoading(false);
@@ -89,7 +106,7 @@ export default function PlayerSearch() {
 
   const handleManualSearch = () => {
     if (query.trim()) {
-      setSelectedPlayer({ name: query });
+      handlePlayerSelect(query.trim());
     }
   };
 
@@ -100,28 +117,26 @@ export default function PlayerSearch() {
     }
   };
 
-  const handleRecentClick = (playerName: string) => {
-    setQuery(playerName);
-    setSelectedPlayer({ name: playerName });
-  };
-
   const handleClearCache = () => {
     PlayerCache.clearCache();
     setRecentSearches([]);
     setSuggestions([]);
-    console.log('Cache cleared!');
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-neutral-950 text-white premium-gradient">
+      <div className="container mx-auto px-4 py-12 relative">
+        {/* Background glow effects */}
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/20 blur-[120px] rounded-full -z-10" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-600/20 blur-[120px] rounded-full -z-10" />
+
         <div className="mb-8 flex justify-between items-center">
-          <Link to="/" className="text-blue-400 hover:text-blue-300 flex items-center gap-2">
-            ← Back to Home
+          <Link to="/" className="text-gray-400 hover:text-white flex items-center gap-2 group transition-all">
+            <span className="group-hover:-translate-x-1 transition-transform">←</span> Back to Home
           </Link>
           <button
             onClick={handleClearCache}
-            className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-sm font-semibold transition-colors"
+            className="px-4 py-2 bg-white/5 hover:bg-red-500/20 border border-white/10 hover:border-red-500/30 rounded-lg text-xs font-semibold transition-all backdrop-blur-sm"
           >
             Clear Cache ({PlayerCache.getPlayerCount()})
           </button>
@@ -130,30 +145,33 @@ export default function PlayerSearch() {
         <div className="max-w-5xl mx-auto">
           {/* Hero Section */}
           {!playerStats && (
-            <div className="text-center mb-12">
-              <h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-                Battlefield 2042 Stats
+            <div className="text-center mb-16 animate-fade-in">
+              <h1 className="text-6xl md:text-7xl font-black mb-6 tracking-tighter">
+                <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent italic">
+                  BATTLEFIELD
+                </span>
+                <span className="ml-4">2042</span>
               </h1>
-              <p className="text-xl text-gray-400">
-                Track your performance and dominate the battlefield
+              <p className="text-xl text-gray-400 font-medium">
+                Advanced performance tracking and global player search
               </p>
             </div>
           )}
 
           {/* Search Section */}
-          <div className="mb-8">
-            <div className="space-y-4">
+          <div className="mb-12">
+            <div className="space-y-6">
               {/* Platform Selector */}
-              <div className="flex justify-center gap-2 flex-wrap">
+              <div className="flex justify-center gap-2 flex-wrap animate-fade-in" style={{ animationDelay: '0.1s' }}>
                 {PLATFORMS.map((platform) => (
                   <button
                     key={platform.id}
                     type="button"
                     onClick={() => setSelectedPlatform(platform.id)}
-                    className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+                    className={`px-5 py-2.5 rounded-xl font-bold transition-all border ${
                       selectedPlatform === platform.id
-                        ? 'bg-blue-600 text-white scale-105'
-                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                        ? 'bg-blue-600 border-blue-500 text-white shadow-lg shadow-blue-600/20 scale-105'
+                        : 'bg-white/5 border-white/10 text-gray-400 hover:bg-white/10 hover:text-white'
                     }`}
                   >
                     <span className="mr-2">{platform.icon}</span>
@@ -163,21 +181,21 @@ export default function PlayerSearch() {
               </div>
 
               {/* Search Bar with Autocomplete */}
-              <div className="relative max-w-3xl mx-auto">
+              <div className="relative max-w-3xl mx-auto animate-fade-in" style={{ animationDelay: '0.2s' }}>
                 <Combobox value={selectedPlayer} onChange={setSelectedPlayer}>
                   <div className="relative">
-                    <div className="flex gap-3">
+                    <div className="flex gap-4">
                       <div className="flex-1 relative">
                         <Combobox.Input
-                          className="w-full px-6 py-4 text-lg bg-gray-800 border-2 border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 text-white placeholder-gray-400 transition-all"
-                          placeholder="Enter exact player name..."
+                          className="w-full px-8 py-5 text-xl bg-white/5 border border-white/10 rounded-2xl focus:outline-none focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 text-white placeholder-gray-500 transition-all backdrop-blur-md"
+                          placeholder="Search player name..."
                           onChange={(e) => setQuery(e.target.value)}
                           onKeyPress={handleKeyPress}
                           displayValue={(player: any) => player?.name || query}
                           autoComplete="off"
                         />
                         {loading && (
-                          <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                          <div className="absolute right-6 top-1/2 transform -translate-y-1/2 pointer-events-none">
                             <div className="h-6 w-6 animate-spin rounded-full border-3 border-solid border-blue-500 border-r-transparent"></div>
                           </div>
                         )}
@@ -185,52 +203,50 @@ export default function PlayerSearch() {
                       <button
                         onClick={handleManualSearch}
                         disabled={loading || !query.trim()}
-                        className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-700 disabled:to-gray-700 disabled:cursor-not-allowed rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none"
+                        className="px-10 py-5 bg-blue-600 hover:bg-blue-500 disabled:bg-white/5 disabled:text-gray-600 disabled:border-white/10 rounded-2xl font-black text-lg transition-all shadow-xl shadow-blue-950/20 hover:scale-[1.02] active:scale-95 flex items-center gap-2"
                       >
-                        {loading ? 'Searching...' : 'Search'}
+                        {loading ? 'Searching...' : 'SEARCH'}
                       </button>
                     </div>
 
                     <Transition
                       show={suggestions.length > 0 && query.length >= 1 && !playerStats}
+                      as={React.Fragment}
                       leave="transition ease-in duration-100"
                       leaveFrom="opacity-100"
                       leaveTo="opacity-0"
                     >
-                      <Combobox.Options className="absolute mt-2 w-full bg-gray-800 border-2 border-gray-700 rounded-xl shadow-2xl z-50 max-h-80 overflow-y-auto">
-                        <div className="p-2">
-                          <div className="text-xs text-gray-400 px-3 py-2 font-semibold uppercase tracking-wide">
-                            📝 Recent Searches ({suggestions.length})
+                      <Combobox.Options className="absolute mt-3 w-full glass-panel z-50 p-2 overflow-hidden">
+                        <div className="max-h-80 overflow-y-auto custom-scrollbar">
+                          <div className="text-[10px] text-gray-500 px-4 py-2 font-black uppercase tracking-[0.2em]">
+                            Global Suggestions
                           </div>
                           {suggestions.map((player, index) => (
                             <Combobox.Option
                               key={index}
                               value={player}
                               className={({ active }) =>
-                                `cursor-pointer select-none p-4 rounded-lg mb-2 last:mb-0 transition-all ${
+                                `cursor-pointer select-none px-4 py-3 rounded-xl mb-1 last:mb-0 transition-all ${
                                   active
-                                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 scale-[1.02]'
-                                    : 'bg-gray-700 hover:bg-gray-600'
+                                    ? 'bg-blue-600 text-white shadow-lg'
+                                    : 'hover:bg-white/5'
                                 }`
                               }
                             >
                               {({ active }) => (
                                 <div className="flex justify-between items-center">
-                                  <div className="flex-1">
-                                    <div className="font-bold text-lg text-white">
-                                      {player.name}
+                                  <div>
+                                    <div className="font-bold text-lg">{player.name}</div>
+                                    <div className={`text-xs flex items-center gap-2 ${active ? 'text-blue-100' : 'text-gray-500'}`}>
+                                      <span>{PLATFORMS.find(p => p.id === player.platform)?.icon || '🎮'}</span>
+                                      <span className="capitalize">{player.platform || 'Cross-play'}</span>
+                                      {player.isGlobal && (
+                                        <span className="bg-white/10 px-1.5 py-0.5 rounded text-[8px] uppercase tracking-wider">Global</span>
+                                      )}
                                     </div>
-                                    {player.platform && (
-                                      <div className="text-sm text-gray-300 mt-1 flex items-center gap-2">
-                                        <span>
-                                          {PLATFORMS.find(p => p.id === player.platform)?.icon || '🎮'}
-                                        </span>
-                                        <span className="capitalize">{player.platform}</span>
-                                      </div>
-                                    )}
                                   </div>
-                                  <div className={`ml-4 ${active ? 'text-white' : 'text-blue-400'}`}>
-                                    View Stats →
+                                  <div className={`text-sm font-bold ${active ? 'text-white' : 'text-blue-400 opacity-0 group-hover:opacity-100'}`}>
+                                    LIFT OFF →
                                   </div>
                                 </div>
                               )}
@@ -241,27 +257,20 @@ export default function PlayerSearch() {
                     </Transition>
                   </div>
                 </Combobox>
-
-                <p className="mt-3 text-center text-sm text-gray-400">
-                  💡 Enter the exact player name (case sensitive) or select from recent searches
-                </p>
               </div>
 
               {/* Recent Searches Pills */}
               {recentSearches.length > 0 && !playerStats && (
-                <div className="max-w-3xl mx-auto">
-                  <div className="text-sm text-gray-400 mb-2 text-center">Recent Searches:</div>
-                  <div className="flex justify-center gap-2 flex-wrap">
+                <div className="max-w-3xl mx-auto animate-fade-in" style={{ animationDelay: '0.3s' }}>
+                  <div className="flex justify-center gap-3 flex-wrap">
                     {recentSearches.map((player, index) => (
                       <button
                         key={index}
-                        onClick={() => handleRecentClick(player.name)}
-                        className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-full text-sm transition-all flex items-center gap-2"
+                        onClick={() => handlePlayerSelect(player.name)}
+                        className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-sm font-bold transition-all flex items-center gap-2 hover:scale-105 active:scale-95"
                       >
-                        {player.platform && (
-                          <span>{PLATFORMS.find(p => p.id === player.platform)?.icon || '🎮'}</span>
-                        )}
-                        <span>{player.name}</span>
+                        <span className="opacity-70">{PLATFORMS.find(p => p.id === player.platform)?.icon || '🎮'}</span>
+                        <span className="text-gray-300">{player.name}</span>
                       </button>
                     ))}
                   </div>
@@ -270,16 +279,17 @@ export default function PlayerSearch() {
             </div>
           </div>
 
+          {/* Loading State */}
+          {loading && <PlayerStatsSkeleton />}
+
           {/* Error Message */}
-          {error && (
-            <div className="max-w-3xl mx-auto mb-8 bg-red-900/30 border-2 border-red-700 rounded-xl p-6 backdrop-blur">
-              <div className="flex items-start gap-3">
-                <span className="text-2xl">❌</span>
+          {error && !loading && (
+            <div className="max-w-3xl mx-auto mb-8 glass-card border-red-500/30 p-8 animate-fade-in">
+              <div className="flex items-center gap-4">
+                <span className="text-4xl">⚠️</span>
                 <div>
-                  <p className="text-red-200 font-semibold text-lg">{error}</p>
-                  <p className="text-red-300 text-sm mt-2">
-                    Make sure you're using the exact player name (including capitalization)
-                  </p>
+                  <h3 className="text-xl font-bold text-red-400">Target Not Found</h3>
+                  <p className="text-gray-400 mt-1">{error}</p>
                 </div>
               </div>
             </div>
@@ -287,30 +297,27 @@ export default function PlayerSearch() {
 
           {/* Player Stats */}
           {playerStats && !loading && (
-            <div className="space-y-6 animate-fadeIn">
+            <div className="space-y-8 animate-fade-in">
               {/* Player Header */}
-              <div className="bg-gradient-to-r from-gray-800 to-gray-700 border-2 border-gray-600 rounded-xl p-6 shadow-xl">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h2 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-                      {selectedPlayer?.name || query}
+              <div className="glass-card p-8 border-l-4 border-l-blue-600">
+                <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+                  <div className="text-center md:text-left">
+                    <h2 className="text-5xl font-black mb-3 tracking-tight italic">
+                      {playerStats.userName || query.toUpperCase()}
                     </h2>
-                    <div className="flex items-center gap-3 text-gray-300">
-                      {selectedPlatform !== 'all' && (
-                        <>
-                          <span className="text-2xl">
-                            {PLATFORMS.find(p => p.id === selectedPlatform)?.icon}
-                          </span>
-                          <span className="font-semibold capitalize">{selectedPlatform}</span>
-                        </>
-                      )}
+                    <div className="flex items-center justify-center md:justify-start gap-4">
+                      <div className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-lg border border-white/10">
+                        <span className="text-xl">{PLATFORMS.find(p => p.id === selectedPlatform)?.icon || '🎮'}</span>
+                        <span className="font-black text-sm uppercase tracking-widest text-blue-400">{selectedPlatform}</span>
+                      </div>
+                      <div className="text-gray-500 font-bold uppercase text-xs tracking-[0.2em]">Verified Profile</div>
                     </div>
                   </div>
                   <button
                     onClick={handleReset}
-                    className="px-6 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg transition-all font-semibold"
+                    className="px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl font-black uppercase tracking-widest transition-all hover:scale-105"
                   >
-                    New Search
+                    New Op
                   </button>
                 </div>
               </div>
@@ -335,11 +342,11 @@ export default function PlayerSearch() {
                     .join(' ');
 
                   return (
-                    <div key={key} className="bg-gray-800 border border-gray-700 p-5 rounded-xl hover:border-blue-500 transition-all">
-                      <div className="text-sm text-gray-400 mb-2 font-semibold uppercase tracking-wide">
+                    <div key={key} className="glass-card p-6 border-white/5 hover:border-blue-500/50 hover:bg-white/10 group">
+                      <div className="text-[10px] text-gray-500 mb-2 font-black uppercase tracking-[0.2em] group-hover:text-blue-400 transition-colors">
                         {formattedKey}
                       </div>
-                      <div className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                      <div className="text-3xl font-black text-white italic">
                         {typeof value === 'number'
                           ? value.toLocaleString()
                           : value?.toString() || 'N/A'}
@@ -349,29 +356,23 @@ export default function PlayerSearch() {
                 })}
               </div>
 
-              {Object.keys(playerStats).filter(key =>
-                typeof playerStats[key] !== 'object' &&
-                !Array.isArray(playerStats[key]) &&
-                key !== 'errors'
-              ).length === 0 && (
-                <div className="text-center py-12 bg-gray-800 rounded-xl">
-                  <p className="text-gray-400 text-lg">No stats available for this player.</p>
-                </div>
-              )}
-
-              {/* Additional Details */}
+              {/* Class Performance */}
               {playerStats.classes && Array.isArray(playerStats.classes) && (
-                <div className="bg-gray-800 border border-gray-700 rounded-xl p-6">
-                  <h3 className="text-2xl font-bold mb-6">Classes Performance</h3>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="glass-panel p-8">
+                  <h3 className="text-2xl font-black mb-8 italic uppercase tracking-wider">Class Breakdown</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                     {playerStats.classes.map((classData: any, index: number) => (
-                      <div key={index} className="bg-gray-700 p-4 rounded-lg hover:bg-gray-600 transition-all">
-                        <div className="text-sm text-gray-400 mb-1 font-semibold uppercase">
-                          {classData.className || `Class ${index + 1}`}
+                      <div key={index} className="space-y-2 group">
+                        <div className="text-xs text-gray-500 font-black uppercase tracking-tighter group-hover:text-blue-400 transition-colors">
+                          {classData.className || `Specialist ${index + 1}`}
                         </div>
-                        <div className="text-2xl font-bold text-blue-400">
-                          {classData.kills || 0} kills
+                        <div className="bg-white/5 rounded-xl h-2 overflow-hidden">
+                          <div 
+                            className="h-full bg-blue-600 shadow-[0_0_15px_rgba(37,99,235,0.5)] transition-all duration-1000"
+                            style={{ width: `${Math.min(100, (classData.kills / 1000) * 100)}%` }}
+                          />
                         </div>
+                        <div className="text-2xl font-black italic">{classData.kills?.toLocaleString() || 0} <span className="text-[10px] non-italic text-gray-600 ml-1">KILLS</span></div>
                       </div>
                     ))}
                   </div>
@@ -382,25 +383,27 @@ export default function PlayerSearch() {
 
           {/* Empty State */}
           {!playerStats && !loading && !error && (
-            <div className="max-w-3xl mx-auto">
-              <div className="bg-gray-800 border-2 border-gray-700 rounded-xl p-12 text-center">
-                <div className="text-7xl mb-6">🎯</div>
-                <p className="text-gray-400 text-lg mb-6">
-                  Search for any Battlefield 2042 player to view their stats
+            <div className="max-w-3xl mx-auto mt-20 animate-fade-in" style={{ animationDelay: '0.4s' }}>
+              <div className="glass-panel p-16 text-center border-white/5 relative overflow-hidden group">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-50" />
+                <div className="text-8xl mb-8 group-hover:scale-110 transition-transform duration-500">🛰️</div>
+                <h3 className="text-2xl font-black mb-4 uppercase italic">Ready for Deployment</h3>
+                <p className="text-gray-400 max-w-md mx-auto font-medium">
+                  Scan the BF2042 network for combat performance data and tactical statistics.
                 </p>
 
-                <div className="grid md:grid-cols-3 gap-4 mt-8">
-                  <div className="bg-gray-700 p-4 rounded-lg">
-                    <div className="text-3xl mb-2">📊</div>
-                    <p className="text-sm text-gray-300">Detailed Stats</p>
+                <div className="grid grid-cols-3 gap-8 mt-16">
+                  <div className="space-y-2">
+                    <div className="text-3xl">💹</div>
+                    <div className="text-[10px] font-black uppercase text-gray-500 tracking-widest">Real-time</div>
                   </div>
-                  <div className="bg-gray-700 p-4 rounded-lg">
-                    <div className="text-3xl mb-2">🏆</div>
-                    <p className="text-sm text-gray-300">Performance Tracking</p>
+                  <div className="space-y-2">
+                    <div className="text-3xl">📈</div>
+                    <div className="text-[10px] font-black uppercase text-gray-500 tracking-widest">History</div>
                   </div>
-                  <div className="bg-gray-700 p-4 rounded-lg">
-                    <div className="text-3xl mb-2">⚔️</div>
-                    <p className="text-sm text-gray-300">Class Breakdown</p>
+                  <div className="space-y-2">
+                    <div className="text-3xl">⚔️</div>
+                    <div className="text-[10px] font-black uppercase text-gray-500 tracking-widest">Compare</div>
                   </div>
                 </div>
               </div>
