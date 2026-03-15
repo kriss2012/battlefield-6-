@@ -18,6 +18,28 @@
   .text-glow {
     text-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
   }
+
+  .tactical-border {
+    position: relative;
+  }
+
+  .tactical-border::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    background: linear-gradient(45deg, transparent 40%, rgba(59, 130, 246, 0.5), transparent 60%);
+    z-index: -1;
+    border-radius: inherit;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    padding: 1px;
+  }
+
+  .hud-font {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
 }
 
 .scanline {
@@ -32,22 +54,22 @@
     rgba(0, 0, 0, 0.05) 50%
   );
   background-size: 100% 4px;
-  z-index: 50;
+  z-index: 110;
   pointer-events: none;
   opacity: 0.15;
 }
 
 @keyframes glitch {
-  0% { transform: translate(0); }
-  20% { transform: translate(-2px, 2px); }
-  40% { transform: translate(-2px, -2px); }
-  60% { transform: translate(2px, 2px); }
-  80% { transform: translate(2px, -2px); }
-  100% { transform: translate(0); }
+  0% { clip-path: inset(80% 0 0 0); transform: translate(-2px, 2px); }
+  10% { clip-path: inset(10% 0 80% 0); transform: translate(2px, -2px); }
+  20% { clip-path: inset(80% 0 0 0); transform: translate(-2px, 2px); }
+  30% { clip-path: inset(10% 0 80% 0); transform: translate(2px, -2px); }
+  40% { clip-path: inset(0 0 0 0); transform: translate(0); }
+  100% { clip-path: inset(0 0 0 0); transform: translate(0); }
 }
 
-.hover-glitch:hover {
-  animation: glitch 0.3s infinite linear;
+.animate-glitch {
+  animation: glitch 2s infinite linear alternate-reverse;
 }
 
 @keyframes fadeIn {
@@ -57,4 +79,14 @@
 
 .animate-fade-in {
   animation: fadeIn 0.5s ease-out forwards;
+}
+
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 105;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  mix-blend-mode: overlay;
 }
