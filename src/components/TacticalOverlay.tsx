@@ -1,12 +1,25 @@
-import React, { useEffect } from 'react';
-import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
+import { motion, useScroll, useTransform, useSpring, useMotionValue, useVelocity } from 'framer-motion';
 
 const TacticalOverlay: React.FC = () => {
-  const { scrollYProgress } = useScroll();
+  const { scrollYProgress, scrollY } = useScroll();
+  const scrollVelocity = useVelocity(scrollY);
   
   // Mouse parallax
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
+
+  const [fps, setFps] = useState(144);
+  const [neuralLoad, setNeuralLoad] = useState(24);
+
+  useEffect(() => {
+    // Simulate telemetry changes
+    const interval = setInterval(() => {
+      setFps(Math.floor(140 + Math.random() * 10));
+      setNeuralLoad(Math.floor(20 + Math.random() * 15));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent | MouseEvent) => {
     const { clientX, clientY } = e as MouseEvent;
@@ -28,10 +41,29 @@ const TacticalOverlay: React.FC = () => {
   const gridY = useTransform(scrollYProgress, [0, 1], [0, -50]);
   const smoothGridY = useSpring(gridY, { stiffness: 100, damping: 30 });
 
+  // Compass Heading Logic
+  const heading = useTransform(scrollYProgress, [0, 1], [0, 360]);
+  const smoothHeading = useSpring(heading, { stiffness: 50, damping: 30 });
+
+  // Scroll Glitch Intensity
+  const glitchOpacity = useTransform(scrollVelocity, [-2000, 0, 2000], [0.3, 0, 0.3]);
+  const smoothGlitchOpacity = useSpring(glitchOpacity, { stiffness: 100, damping: 20 });
+
   return (
     <div className="fixed inset-0 pointer-events-none z-[100] overflow-hidden">
       {/* Noise Texture Layer */}
       <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+
+      {/* Jitter Layer on High Speed */}
+      <motion.div 
+        style={{ opacity: smoothGlitchOpacity }}
+        className="absolute inset-0 bg-blue-500/5 mix-blend-color-dodge z-[150]"
+        animate={{
+          x: [0, -2, 2, -1, 1, 0],
+          y: [0, 1, -1, 2, -2, 0],
+        }}
+        transition={{ duration: 0.1, repeat: Infinity, repeatType: "mirror" }}
+      />
 
       {/* Dynamic Tactical Grid */}
       <motion.div 
@@ -45,27 +77,89 @@ const TacticalOverlay: React.FC = () => {
       {/* Vignette & CRT Scars */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.4)_100%)]" />
       
-      {/* HUD Elements - Static corners with subtle reaction */}
+      {/* Left Telemetry Panel */}
+      <div className="absolute bottom-12 left-12 flex flex-col gap-4 font-mono">
+        <div className="flex flex-col">
+          <span className="text-[8px] text-gray-500 tracking-widest uppercase">Telemetry Status</span>
+          <div className="flex items-center gap-2">
+            <span className="text-xl font-black italic text-blue-400">{fps}</span>
+            <span className="text-[10px] text-blue-400/50">FPS</span>
+          </div>
+        </div>
+
+        <div className="flex flex-col w-32">
+          <div className="flex justify-between items-center mb-1">
+            <span className="text-[8px] text-gray-500 tracking-widest uppercase">Neural Load</span>
+            <span className="text-[8px] text-white/60">{neuralLoad}%</span>
+          </div>
+          <div className="h-1 bg-white/5 rounded-full overflow-hidden border border-white/5">
+            <motion.div 
+              className="h-full bg-gradient-to-r from-blue-500 to-emerald-400"
+              animate={{ width: `${neuralLoad}%` }}
+              transition={{ type: "spring", stiffness: 50 }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Compass / Heading Indicator */}
+      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+        <div className="flex items-center gap-12 font-mono text-[9px] tracking-[0.3em] text-white/40 mb-2">
+          <span>N</span>
+          <span>E</span>
+          <span className="text-blue-400 font-bold">S</span>
+          <span>W</span>
+        </div>
+        <div className="relative w-64 h-2 flex items-center justify-center">
+          <div className="absolute inset-0 border-b border-white/20" />
+          <motion.div 
+            style={{ x: useTransform(smoothHeading, [0, 360], [-100, 100]) }}
+            className="absolute top-0 w-4 h-full flex flex-col items-center"
+          >
+            <div className="w-[1px] h-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]" />
+            <div className="w-2 h-2 rounded-full border border-blue-500 absolute -top-4" />
+          </motion.div>
+        </div>
+        <div className="font-mono text-[10px] font-black italic text-white/60 mt-2">
+          HDG // <motion.span>{useTransform(smoothHeading, (v) => v.toFixed(1))}</motion.span>°
+        </div>
+      </div>
+
+      {/* HUD Corner Elements */}
       <motion.div 
         style={{ x: useTransform(smoothMouseX, (v) => v * 0.2), y: useTransform(smoothMouseY, (v) => v * 0.2) }}
         className="absolute inset-0 p-8"
       >
-        <div className="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-white/20" />
-        <div className="absolute top-0 right-0 w-12 h-12 border-t-2 border-r-2 border-white/20" />
-        <div className="absolute bottom-0 left-0 w-12 h-12 border-b-2 border-l-2 border-white/20" />
-        <div className="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-white/20" />
+        <div className="absolute top-0 left-0 w-12 h-12 border-t border-l border-white/20 rounded-tl-xl" />
+        <div className="absolute top-0 right-0 w-12 h-12 border-t border-r border-white/20 rounded-tr-xl" />
+        <div className="absolute bottom-0 left-0 w-12 h-12 border-b border-l border-white/20 rounded-bl-xl" />
+        <div className="absolute bottom-0 right-0 w-12 h-12 border-b border-r border-white/20 rounded-br-xl" />
       </motion.div>
 
-      {/* Top Bar Telemetry */}
-      <div className="absolute top-4 left-1/2 -translate-x-1/2 flex gap-8 text-[8px] font-mono text-white/40 tracking-[0.2em] uppercase">
-        <span>SYS: ONLINE</span>
-        <span>LAT: 24MS</span>
-        <span>SIG: STABLE</span>
-        <span>TRK: ACTIVE</span>
+      {/* Top Bar Signal (Already handled by Nav mostly, but adding small detail) */}
+      <div className="absolute top-2 w-full flex justify-between px-12 font-mono text-[7px] text-white/20 tracking-[0.5em] uppercase pointer-events-none">
+        <div className="flex gap-4">
+          <span>Uplink: Synchronized</span>
+          <span>Encryption: AES-256</span>
+        </div>
+        <div className="flex gap-4">
+          <span>Combat Zone: US_EAST_01</span>
+          <span>Cycle: 08:24:55</span>
+        </div>
       </div>
 
-      {/* Scanline Animation Overlay (already in CSS usually, but adding a refined version here) */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.05)_50%),linear-gradient(90deg,rgba(255,0,0,0.01),rgba(0,255,0,0.005),rgba(0,0,255,0.01))] bg-[size:100%_4px,3px_100%]" />
+      {/* Bottom Right Integrity Log */}
+      <div className="absolute bottom-12 right-12 w-48 font-mono text-[7px] text-white/20 uppercase tracking-widest flex flex-col gap-1 items-end text-right">
+        <span className="text-blue-500/40 font-black mb-1">System_Integrity_Log</span>
+        <motion.div animate={{ opacity: [0.2, 0.5, 0.2] }} transition={{ duration: 2, repeat: Infinity }}>
+          - MEMORY_SYNC: OK<br/>
+          - KERNEL_LOAD: NOMINAL<br/>
+          - ENCRYPTION: ACTIVE<br/>
+          - UPLINK_LATENCY: 24MS
+        </motion.div>
+      </div>
+
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.05)_50%)] bg-[size:100%_4px]" />
     </div>
   );
 };
