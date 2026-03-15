@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 
 export default function Home() {
@@ -48,72 +49,67 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto animate-fade-in" style={{ animationDelay: '0.1s' }}>
-          <Link
-            to="/player"
-            className="glass-card p-8 group hover:scale-105"
-          >
-            <div className="text-5xl mb-6 transition-transform group-hover:scale-110">📊</div>
-            <h2 className="text-xl font-black mb-3 italic uppercase tracking-wider group-hover:text-blue-400 transition-colors">Tactical Stats</h2>
-            <p className="text-gray-500 text-sm font-medium leading-relaxed">
-              Deep-dive into player performance with detailed metrics and class breakdowns.
-            </p>
-          </Link>
-
-          <Link
-            to="/analytics"
-            className="glass-card p-8 group hover:scale-105"
-          >
-            <div className="text-5xl mb-6 transition-transform group-hover:scale-110">📈</div>
-            <h2 className="text-xl font-black mb-3 italic uppercase tracking-wider group-hover:text-purple-400 transition-colors">Telemetry</h2>
-            <p className="text-gray-500 text-sm font-medium leading-relaxed">
-              Visualize historical trends with skill signatures and performance stability charts.
-            </p>
-          </Link>
-
-          <Link
-            to="/leaderboard"
-            className="glass-card p-8 group hover:scale-105"
-          >
-            <div className="text-5xl mb-6 transition-transform group-hover:scale-110">🏆</div>
-            <h2 className="text-xl font-black mb-3 italic uppercase tracking-wider group-hover:text-amber-400 transition-colors">Rankings</h2>
-            <p className="text-gray-500 text-sm font-medium leading-relaxed">
-              Global ranking system tracking the most lethal operators in the combat theater.
-            </p>
-          </Link>
-
-          <Link
-            to="/servers"
-            className="glass-card p-8 group hover:scale-105"
-          >
-            <div className="text-5xl mb-6 transition-transform group-hover:scale-110">🎮</div>
-            <h2 className="text-xl font-black mb-3 italic uppercase tracking-wider group-hover:text-emerald-400 transition-colors">Network</h2>
-            <p className="text-gray-500 text-sm font-medium leading-relaxed">
-              Scan active combat zones for server availability and real-time player density.
-            </p>
-          </Link>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+          {[
+            { to: "/player", icon: "📊", title: "Tactical Stats", desc: "Deep-dive into player performance with detailed metrics and class breakdowns.", color: "blue" },
+            { to: "/analytics", icon: "📈", title: "Telemetry", desc: "Visualize historical trends with skill signatures and performance stability charts.", color: "purple" },
+            { to: "/leaderboard", icon: "🏆", title: "Rankings", desc: "Global ranking system tracking the most lethal operators in the combat theater.", color: "amber" },
+            { to: "/servers", icon: "🎮", title: "Network", desc: "Scan active combat zones for server availability and real-time player density.", color: "emerald" },
+          ].map((item, i) => (
+            <motion.div
+              key={item.to}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1, type: "spring", stiffness: 100 }}
+            >
+              <Link
+                to={item.to}
+                className="glass-card p-8 group relative overflow-hidden block h-full select-none"
+              >
+                <div className="text-5xl mb-6 transition-transform group-hover:scale-110 group-hover:-rotate-3">{item.icon}</div>
+                <h2 className={`text-xl font-black mb-3 italic uppercase tracking-wider group-hover:text-${item.color}-400 transition-colors`}>{item.title}</h2>
+                <p className="text-gray-500 text-sm font-medium leading-relaxed">
+                  {item.desc}
+                </p>
+                <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
+              </Link>
+            </motion.div>
+          ))}
         </div>
 
         {/* Additional Features */}
-        <div className="mt-8 max-w-7xl mx-auto animate-fade-in" style={{ animationDelay: '0.2s' }}>
+        <div className="mt-8 max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 gap-6">
-            <Link
-              to="/head-to-head"
-              className="glass-card p-6 group hover:bg-white/10 flex items-center gap-6"
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.4 }}
             >
-              <div className="text-4xl group-hover:rotate-12 transition-transform">⚔️</div>
-              <div>
-                <h3 className="text-lg font-black italic uppercase tracking-widest group-hover:text-orange-400 transition-colors">1v1 Comparison</h3>
-                <p className="text-gray-500 text-sm font-medium">Side-by-side tactical analysis of two unique targets.</p>
-              </div>
-            </Link>
-            <div className="glass-card p-6 opacity-30 cursor-not-allowed flex items-center gap-6 saturate-0">
+              <Link
+                to="/head-to-head"
+                className="glass-card p-6 group hover:bg-white/10 flex items-center gap-6 relative overflow-hidden block"
+              >
+                <div className="text-4xl group-hover:rotate-12 transition-transform">⚔️</div>
+                <div>
+                  <h3 className="text-lg font-black italic uppercase tracking-widest group-hover:text-orange-400 transition-colors">1v1 Comparison</h3>
+                  <p className="text-gray-500 text-sm font-medium">Side-by-side tactical analysis of two unique targets.</p>
+                </div>
+                <div className="absolute top-0 right-0 p-2 opacity-5 translate-x-1/4 -translate-y-1/4 grayscale pointer-events-none text-8xl">⚔️</div>
+              </Link>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.4 }}
+              className="glass-card p-6 opacity-30 cursor-not-allowed flex items-center gap-6 saturate-0"
+            >
               <div className="text-4xl">👥</div>
               <div>
                 <h3 className="text-lg font-black italic uppercase tracking-widest">Clan Systems</h3>
                 <p className="text-gray-500 text-sm font-medium">DECRYPTING... Available in future combat cycle.</p>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
 
