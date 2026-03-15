@@ -40,6 +40,15 @@
     letter-spacing: 0.15em;
     text-transform: uppercase;
   }
+
+  .hud-nav-container {
+    @apply fixed top-6 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-1 p-1 bg-black/40 backdrop-blur-xl border border-white/10 rounded-full shadow-2xl;
+    clip-path: polygon(5% 0%, 95% 0%, 100% 50%, 95% 100%, 5% 100%, 0% 50%);
+  }
+
+  .hud-nav-item {
+    @apply px-6 py-2 rounded-full font-black text-[10px] tracking-[0.2em] transition-all duration-300 flex items-center gap-2;
+  }
 }
 
 .scanline {
@@ -81,6 +90,25 @@
   animation: fadeIn 0.5s ease-out forwards;
 }
 
+  .chromatic-aberration {
+    text-shadow: 2px 0 #ff0000aa, -2px 0 #00ff00aa;
+    position: relative;
+  }
+
+  .dof-blur {
+    filter: blur(2px) saturate(0.8);
+    transition: filter 0.5s ease;
+  }
+
+  .dof-blur:hover {
+    filter: blur(0) saturate(1);
+  }
+
+  .tactical-glow {
+    box-shadow: 0 0 15px var(--glow-color, rgba(59, 130, 246, 0.4));
+  }
+}
+
 .noise-overlay {
   position: fixed;
   inset: 0;
@@ -89,4 +117,34 @@
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   opacity: 0.05;
   mix-blend-mode: overlay;
+}
+
+@keyframes glitch-v2 {
+  0% { clip-path: polygon(0 2%, 100% 2%, 100% 5%, 0 5%); transform: translate(0); }
+  2% { clip-path: polygon(0 78%, 100% 78%, 100% 100%, 0 100%); transform: translate(-5px); }
+  4% { clip-path: polygon(0 78%, 100% 78%, 100% 100%, 0 100%); transform: translate(5px); }
+  6% { clip-path: polygon(0 78%, 100% 78%, 100% 100%, 0 100%); transform: translate(0); }
+  8% { clip-path: polygon(0 54%, 100% 54%, 100% 44%, 0 44%); transform: translate3d(5px, 0, 0); }
+  9% { clip-path: polygon(0 54%, 100% 54%, 100% 44%, 0 44%); transform: translate3d(0, 0, 0); }
+  100% { clip-path: polygon(0 54%, 100% 54%, 100% 44%, 0 44%); transform: translate3d(0, 0, 0); }
+}
+
+.animate-glitch-v2:hover {
+  animation: glitch-v2 0.3s cubic-bezier(.25,.46,.45,.94) both infinite;
+}
+
+.vector-pulse {
+  mask-image: linear-gradient(to bottom, black, transparent);
+  animation: vector-pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes vector-pulse {
+  0%, 100% { opacity: 0.1; filter: brightness(1); }
+  50% { opacity: 0.4; filter: brightness(2) drop-shadow(0 0 10px #3b82f6); }
+}
+
+.glow-mask {
+  mask-clip: border-box;
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
 }
