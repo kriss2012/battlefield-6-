@@ -12,12 +12,14 @@
   "dependencies": {
     "@headlessui/react": "^2.2.9",
     "@reduxjs/toolkit": "^2.11.2",
+    "@types/recharts": "^1.8.29",
     "framer-motion": "^12.36.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.9.5",
-    "recharts": "^3.4.1"
+    "recharts": "^3.8.0",
+    "socket.io-client": "^4.8.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
