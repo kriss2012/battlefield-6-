@@ -1,6 +1,7 @@
 import express from 'express';
 import pool from '../config/database';
 import { fetchAndStorePlayerStats, addTrackedPlayer } from '../services/statsCollector';
+import { generateRecommendations } from '../services/aiAnalytics';
 import { collectAllTrackedPlayerStats } from '../services/cronJobs';
 
 const router = express.Router();
@@ -210,6 +211,81 @@ router.get('/autocomplete', async (req, res) => {
   } catch (error) {
     console.error('Error in autocomplete:', error);
     return res.status(500).json({ error: 'Failed to fetch suggestions' });
+  }
+});
+
+// Get K/D trend
+router.get('/trends/kd/:playerId', async (req, res) => {
+  try {
+    const { playerId } = req.params;
+    const { days = 30 } = req.query;
+
+    const result = await pool.query(
+      `SELECT 
+        DATE(recorded_at) as date,
+        AVG(kd_ratio) as avg_kd,
+        MAX(kd_ratio) as max_kd,
+        MIN(kd_ratio) as min_kd
+       FROM player_stats_history
+       WHERE player_id = $1
+       AND recorded_at >= NOW() - INTERVAL '${parseInt(days as string)} days'
+       GROUP BY DATE(recorded_at)
+       ORDER BY date ASC`,
+      [playerId]
+    );
+
+    res.json({
+      playerId,
+      trend: result.rows,
+    });
+  } catch (error) {
+    console.error('Error fetching K/D trend:', error);
+    res.status(500).json({ error: 'Failed to fetch trend data' });
+  }
+});
+
+// Get Win Rate trend
+router.get('/trends/winrate/:playerId', async (req, res) => {
+  try {
+    const { playerId } = req.params;
+    const { days = 30 } = req.query;
+
+    const result = await pool.query(
+      `SELECT 
+        DATE(recorded_at) as date,
+        AVG(win_rate) as win_rate
+       FROM player_stats_history
+       WHERE player_id = $1
+       AND recorded_at >= NOW() - INTERVAL '${parseInt(days as string)} days'
+       GROUP BY DATE(recorded_at)
+       ORDER BY date ASC`,
+      [playerId]
+    );
+
+    res.json({
+      playerId,
+      trend: result.rows,
+    });
+  } catch (error) {
+    console.error('Error fetching win rate trend:', error);
+    res.status(500).json({ error: 'Failed to fetch trend data' });
+  }
+});
+
+// Get AI Loadout Recommendations
+router.get('/ai/recommendations/:playerId', async (req, res) => {
+  try {
+    const { playerId } = req.params;
+    const recommendations = await generateRecommendations(playerId);
+    
+    if (!recommendations) {
+      return res.status(404).json({ error: 'Insufficient data for AI analysis' });
+    }
+    
+    res.json(recommendations);
+  } catch (error) {
+    console.error('Error fetching AI recommendations:', error);
+    res.status(500).json({ error: 'Failed to generate recommendations' });
   }
 });
 
