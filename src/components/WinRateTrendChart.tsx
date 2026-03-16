@@ -54,7 +54,12 @@ export default function WinRateTrendChart({ playerId, days = 30 }: WinRateTrendC
         </div>
       </div>
 
-      <div className="flex-1 min-h-[250px] -ml-6">
+      <div className="flex-1 min-h-[250px] -ml-6 relative">
+        {error && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/20 backdrop-blur-sm z-10 rounded-2xl">
+            <p className="text-[10px] font-mono uppercase tracking-widest text-red-400/60">{error}</p>
+          </div>
+        )}
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data}>
             <defs>
@@ -88,7 +93,7 @@ export default function WinRateTrendChart({ playerId, days = 30 }: WinRateTrendC
               }}
               itemStyle={{ color: '#fff', fontSize: '12px', fontWeight: 900, textTransform: 'uppercase' }}
               labelStyle={{ color: '#6b7280', fontSize: '10px', marginBottom: '4px', fontFamily: 'monospace' }}
-              formatter={(value: number) => [`${value.toFixed(1)}%`, 'WIN RATE']}
+              formatter={(value: number | string | undefined) => [`${Number(value).toFixed(1)}%`, 'WIN RATE']}
             />
             <Area 
               type="monotone" 
