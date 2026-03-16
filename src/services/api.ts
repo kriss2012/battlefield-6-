@@ -362,4 +362,214 @@ export const authApi = {
   },
 };
 
+// Social & Squads API
+export const socialApi = {
+  // Friends
+  getFriends: async (token: string) => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/social/friends`, {
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+      if (!response.ok) throw new Error('Failed to fetch friends');
+      return await response.json();
+    } catch (error) {
+      console.error('Social API Error:', error);
+      return { error: error instanceof Error ? error.message : 'An error occurred' };
+    }
+  },
+
+  getFriendRequests: async (token: string) => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/social/friends/requests`, {
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+      if (!response.ok) throw new Error('Failed to fetch friend requests');
+      return await response.json();
+    } catch (error) {
+      console.error('Social API Error:', error);
+      return { error: error instanceof Error ? error.message : 'An error occurred' };
+    }
+  },
+
+  sendFriendRequest: async (token: string, friendUsername: string) => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/social/friends/request`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ friendUsername }),
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to send friend request');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Social API Error:', error);
+      return { error: error instanceof Error ? error.message : 'An error occurred' };
+    }
+  },
+
+  respondToFriendRequest: async (token: string, friendshipId: number, action: 'accept' | 'reject') => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/social/friends/respond`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ friendshipId, action }),
+      });
+      if (!response.ok) throw new Error('Failed to respond to friend request');
+      return await response.json();
+    } catch (error) {
+      console.error('Social API Error:', error);
+      return { error: error instanceof Error ? error.message : 'An error occurred' };
+    }
+  },
+
+  removeFriend: async (token: string, friendshipId: number) => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/social/friends/${friendshipId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+      if (!response.ok) throw new Error('Failed to remove friend');
+      return await response.json();
+    } catch (error) {
+      console.error('Social API Error:', error);
+      return { error: error instanceof Error ? error.message : 'An error occurred' };
+    }
+  },
+
+  // Squads
+  createSquad: async (token: string, data: { name: string; tag: string; description?: string; isPublic?: boolean }) => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/social/squads`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to create squad');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Social API Error:', error);
+      return { error: error instanceof Error ? error.message : 'An error occurred' };
+    }
+  },
+
+  getSquads: async (token: string) => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/social/squads`, {
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+      if (!response.ok) throw new Error('Failed to fetch squads');
+      return await response.json();
+    } catch (error) {
+      console.error('Social API Error:', error);
+      return { error: error instanceof Error ? error.message : 'An error occurred' };
+    }
+  },
+
+  getMySquads: async (token: string) => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/social/squads/me`, {
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+      if (!response.ok) throw new Error('Failed to fetch my squads');
+      return await response.json();
+    } catch (error) {
+      console.error('Social API Error:', error);
+      return { error: error instanceof Error ? error.message : 'An error occurred' };
+    }
+  },
+
+  joinSquad: async (token: string, squadId: number) => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/social/squads/${squadId}/join`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to join squad');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Social API Error:', error);
+      return { error: error instanceof Error ? error.message : 'An error occurred' };
+    }
+  },
+};
+
+// Notifications API
+export const notificationApi = {
+  getNotifications: async (token: string, options?: { limit?: number; unreadOnly?: boolean }) => {
+    try {
+      const queryParams = new URLSearchParams();
+      if (options?.limit) queryParams.append('limit', options.limit.toString());
+      if (options?.unreadOnly) queryParams.append('unreadOnly', 'true');
+      
+      const response = await fetch(`${BACKEND_URL}/api/notifications?${queryParams}`, {
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+      if (!response.ok) throw new Error('Failed to fetch notifications');
+      return await response.json();
+    } catch (error) {
+      console.error('Notification API Error:', error);
+      return { error: error instanceof Error ? error.message : 'An error occurred' };
+    }
+  },
+
+  markAsRead: async (token: string, notificationId: number) => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/notifications/${notificationId}/read`, {
+        method: 'PUT',
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+      if (!response.ok) throw new Error('Failed to mark notification as read');
+      return await response.json();
+    } catch (error) {
+      console.error('Notification API Error:', error);
+      return { error: error instanceof Error ? error.message : 'An error occurred' };
+    }
+  },
+
+  markAllAsRead: async (token: string) => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/notifications/read-all`, {
+        method: 'PUT',
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+      if (!response.ok) throw new Error('Failed to mark all notifications as read');
+      return await response.json();
+    } catch (error) {
+      console.error('Notification API Error:', error);
+      return { error: error instanceof Error ? error.message : 'An error occurred' };
+    }
+  },
+
+  deleteNotification: async (token: string, notificationId: number) => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/notifications/${notificationId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+      if (!response.ok) throw new Error('Failed to delete notification');
+      return await response.json();
+    } catch (error) {
+      console.error('Notification API Error:', error);
+      return { error: error instanceof Error ? error.message : 'An error occurred' };
+    }
+  },
+};
+
 export { API_BASE_URL, BACKEND_URL };
