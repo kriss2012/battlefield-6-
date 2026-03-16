@@ -57,7 +57,6 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route path="/leaderboard" element={<Leaderboard />} />
           </Routes>
         </Layout>
       </ErrorBoundary>
