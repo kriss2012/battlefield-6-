@@ -22,6 +22,12 @@ export async function initializeDatabase() {
     await pool.query(schema3);
     console.log('✅ Phase 3 schema initialized');
 
+    // Phase 4 schema (Notifications)
+    const schema4Path = path.join(__dirname, 'schema_notifications.sql');
+    const schema4 = fs.readFileSync(schema4Path, 'utf-8');
+    await pool.query(schema4);
+    console.log('✅ Phase 4 schema initialized');
+
     console.log('✅ All database schemas initialized successfully');
   } catch (error) {
     console.error('❌ Error initializing database:', error);
