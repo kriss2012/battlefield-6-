@@ -1,4 +1,5 @@
 import pool from '../config/database';
+import { io } from '../index';
 
 export async function createNotification(
   userId: number,
@@ -14,7 +15,13 @@ export async function createNotification(
        RETURNING *`,
       [userId, type, title, message, link || null]
     );
-    return result.rows[0];
+
+    const notification = result.rows[0];
+
+    // Emit real-time update
+    io.to(`user_${userId}`).emit('new_notification', notification);
+
+    return notification;
   } catch (error) {
     console.error('Error creating notification:', error);
     return null;
