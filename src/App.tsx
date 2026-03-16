@@ -13,6 +13,9 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
 import NeuralForge from './pages/NeuralForge';
+import Friends from './pages/Friends';
+import Squads from './pages/Squads';
+import Leaderboard from './pages/Leaderboard';
 
 function App() {
   return (
@@ -38,6 +41,23 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/friends"
+              element={
+                <ProtectedRoute>
+                  <Friends />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/squads"
+              element={
+                <ProtectedRoute>
+                  <Squads />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/leaderboard" element={<Leaderboard />} />
           </Routes>
         </Layout>
       </ErrorBoundary>
