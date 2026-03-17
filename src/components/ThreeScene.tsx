@@ -1,6 +1,9 @@
 import React, { Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, Environment, Float, ContactShadows } from '@react-three/drei';
+import { EffectComposer, Bloom, Noise, Vignette, ChromaticAberration } from '@react-three/postprocessing';
+import { BlendFunction } from 'postprocessing';
+import * as THREE from 'three';
 
 interface ThreeSceneProps {
   children: React.ReactNode;
@@ -40,6 +43,22 @@ const ThreeScene: React.FC<ThreeSceneProps> = ({
           />
           
           <Environment preset={environment} />
+          
+          <EffectComposer multisampling={4}>
+            <Bloom 
+              intensity={1.5} 
+              luminanceThreshold={0.2} 
+              luminanceSmoothing={0.9} 
+              height={300} 
+            />
+            <Noise opacity={0.05} blendFunction={BlendFunction.OVERLAY} />
+            <Vignette eskil={false} offset={0.1} darkness={1.1} />
+            <ChromaticAberration 
+              blendFunction={BlendFunction.NORMAL} 
+              offset={new THREE.Vector2(0.001, 0.001)} 
+            />
+          </EffectComposer>
+
           <OrbitControls 
             enablePan={false} 
             enableZoom={enableZoom} 
