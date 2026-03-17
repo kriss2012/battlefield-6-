@@ -15,6 +15,7 @@ import NeuralForge from './pages/NeuralForge';
 import Friends from './pages/Friends';
 import Squads from './pages/Squads';
 import Leaderboard from './pages/Leaderboard';
+import Armory from './pages/Armory';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
             <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="/head-to-head" element={<HeadToHead />} />
             <Route path="/forge" element={<NeuralForge />} />
+            <Route path="/armory" element={<Armory />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route
