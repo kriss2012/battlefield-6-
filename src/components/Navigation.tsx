@@ -19,6 +19,7 @@ export default function Navigation() {
     { to: "/leaderboard", label: "RANKINGS" },
     { to: "/servers", label: "NETWORKS" },
     { to: "/head-to-head", label: "H2H" },
+    { to: "/armory", label: "ARMORY" },
     { to: "/forge", label: "NEURAL FORGE" },
     { to: "/friends", label: "FRIENDS" },
     { to: "/squads", label: "SQUADS" },
