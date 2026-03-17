@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
-import TacticalMap from '../components/TacticalMap';
+import Hero3D from '../components/Hero3D';
 
 export default function Home() {
   const { isAuthenticated, user } = useAuth();
@@ -41,8 +41,8 @@ export default function Home() {
           )}
         </div>
 
-        <div className="flex flex-col lg:flex-row items-center gap-16 mb-32">
-          <div className="flex-1 text-left animate-fade-in relative">
+        <div className="flex flex-col lg:flex-row items-center gap-16 mb-32 perspective-1000">
+          <div className="flex-1 text-left animate-fade-in relative preserve-3d">
             <div className="flex items-center gap-2 mb-4">
               <span className="h-[1px] w-8 bg-blue-500" />
               <span className="text-[10px] font-mono text-blue-400 tracking-[0.4em] uppercase">Tactical Intelligence Hub</span>
@@ -54,12 +54,12 @@ export default function Home() {
               Advanced performance tracking, real-time server telemetry, and global competitive analytics.
             </p>
             <div className="flex gap-4">
-              <button className="px-8 py-3 bg-blue-600 rounded-xl font-black italic text-xs uppercase tracking-widest hover:bg-blue-500 transition-all">Launch Theater</button>
+              <button className="px-8 py-3 bg-blue-600 rounded-xl font-black italic text-xs uppercase tracking-widest hover:bg-blue-500 transition-all shadow-lg shadow-blue-500/20">Launch Theater</button>
               <button className="px-8 py-3 bg-white/5 border border-white/10 rounded-xl font-black italic text-xs uppercase tracking-widest hover:bg-white/10 transition-all">Manuals</button>
             </div>
           </div>
-          <div className="flex-1 w-full lg:max-w-2xl">
-            <TacticalMap />
+          <div className="flex-1 w-full lg:max-w-2xl floating-3d">
+            <Hero3D />
           </div>
         </div>
 
