@@ -7,6 +7,10 @@ import RadarChart from '../components/RadarChart';
 import { analyticsApi, playerApi } from '../services/api';
 import { Skeleton } from '../components/Skeleton';
 import LoadoutAdvisor from '../components/LoadoutAdvisor';
+import { Canvas } from '@react-three/fiber';
+import { Suspense } from 'react';
+import { OrbitControls } from '@react-three/drei';
+import HologramChart from '../components/HologramChart';
 
 export default function PlayerAnalytics() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -144,7 +148,30 @@ export default function PlayerAnalytics() {
         ) : playerId && (
           <>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-              <RadarChart data={playerData} title="Skill Signature" />
+              <div className="glass-card p-6 min-h-[400px] relative overflow-hidden">
+                <div className="absolute inset-0 z-0">
+                  <Canvas shadows camera={{ position: [0, 2, 8] }}>
+                    <Suspense fallback={null}>
+                      <ambientLight intensity={0.5} />
+                      <pointLight position={[10, 10, 10]} intensity={1} />
+                      <HologramChart 
+                        title="Skill Signature"
+                        data={[
+                          { label: 'ACC', value: playerData?.stats?.accuracy || 45, color: '#3b82f6' },
+                          { label: 'K/D', value: (playerData?.stats?.kd || 1.5) * 20, color: '#60a5fa' },
+                          { label: 'W/R', value: playerData?.stats?.winRate || 50, color: '#10b981' },
+                          { label: 'SPM', value: (playerData?.stats?.spm || 400) / 10, color: '#f59e0b' },
+                        ]} 
+                      />
+                      <OrbitControls enableZoom={false} autoRotate autoRotateSpeed={0.5} />
+                    </Suspense>
+                  </Canvas>
+                </div>
+                <div className="relative z-10 pointer-events-none">
+                  <span className="text-[10px] font-mono text-blue-400 uppercase tracking-widest block mb-1">Neural Analysis</span>
+                  <h3 className="text-xl font-black italic uppercase tracking-tighter">Live Telemetry</h3>
+                </div>
+              </div>
               <div className="glass-card p-6 min-h-[400px]">
                 <KDTrendChart playerId={playerId} days={days} />
               </div>
