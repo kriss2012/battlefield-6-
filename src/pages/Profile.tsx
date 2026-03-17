@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { authApi } from '../services/api';
+import ArmoryView from '../components/ArmoryView';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Profile() {
   const { user, token, logout, updateUser } = useAuth();
@@ -86,20 +88,79 @@ export default function Profile() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-6">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8">My Profile</h1>
+    <div className="min-h-screen bg-neutral-950 text-white pt-24 pb-20 px-4 relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/5 blur-[120px] rounded-full -z-10" />
+      
+      <div className="max-w-6xl mx-auto relative">
+        <div className="flex flex-col lg:flex-row gap-12 mb-12 items-start">
+          {/* 3D Operator Preview Card */}
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="w-full lg:w-1/3 glass-card overflow-hidden h-[500px] relative group"
+          >
+            <ArmoryView type="operator" color="#3b82f6" />
+            <div className="absolute top-6 left-6 p-3 bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl">
+              <span className="text-[10px] font-mono text-blue-400 uppercase tracking-widest block mb-1">Combat Entity</span>
+              <h2 className="text-xl font-black italic uppercase tracking-tighter">{user.username}</h2>
+            </div>
+            <div className="absolute bottom-6 left-6 right-6 p-4 bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-[8px] font-mono text-gray-500 uppercase">Unit Integrity</span>
+                <span className="text-[8px] font-mono text-emerald-400">NOMINAL</span>
+              </div>
+              <div className="h-1 bg-white/10 rounded-full overflow-hidden">
+                <div className="h-full w-full bg-emerald-500" />
+              </div>
+            </div>
+          </motion.div>
+
+          {/* User Info Overview */}
+          <div className="flex-1 space-y-8">
+            <div className="flex justify-between items-end">
+              <div>
+                <h1 className="text-5xl font-black italic tracking-tighter uppercase mb-2">My <span className="text-blue-500">Profile</span></h1>
+                <p className="text-gray-500 font-medium">Uplink established // Operational since 2024</p>
+              </div>
+              <div className="flex gap-4">
+                <button
+                  onClick={() => setEditing(!editing)}
+                  className="px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl font-black italic text-xs uppercase tracking-widest transition-all"
+                >
+                  {editing ? 'CANCEL' : 'CONFIGURE'}
+                </button>
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="bg-white/5 p-6 rounded-2xl border border-white/5">
+                <span className="text-[10px] text-gray-600 block mb-1 uppercase tracking-widest">Player Identity</span>
+                <span className="text-lg font-black text-white italic">{user.playerName || 'UNASSIGNED'}</span>
+              </div>
+              <div className="bg-white/5 p-6 rounded-2xl border border-white/5">
+                <span className="text-[10px] text-gray-600 block mb-1 uppercase tracking-widest">Deployment Sector</span>
+                <span className="text-lg font-black text-white italic">NEO-TOKYO // 01</span>
+              </div>
+            </div>
+
+            <div className="glass-card p-6 min-h-[150px] relative">
+              <span className="text-[10px] text-gray-600 block mb-4 uppercase tracking-widest">Combat Bio / Directives</span>
+              <p className="text-gray-400 font-medium italic">"{user.bio || 'Initial directives not yet established.'}"</p>
+              <div className="absolute bottom-4 right-4 text-[40px] opacity-5 pointer-events-none">📜</div>
+            </div>
+          </div>
+        </div>
 
         {message && (
-          <div className="mb-6 p-4 bg-green-900/50 border border-green-700 rounded-lg text-green-200">
+          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-6 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl text-emerald-400 font-black italic text-xs uppercase tracking-widest">
             {message}
-          </div>
+          </motion.div>
         )}
 
         {error && (
-          <div className="mb-6 p-4 bg-red-900/50 border border-red-700 rounded-lg text-red-200">
+          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-2xl text-red-400 font-black italic text-xs uppercase tracking-widest">
             {error}
-          </div>
+          </motion.div>
         )}
 
         {/* Profile Information */}
