@@ -57,7 +57,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.setItem('auth_user', JSON.stringify(result.user));
 
       return { success: true };
-    } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_error) {
       return { success: false, error: 'Login failed' };
     }
   };
@@ -77,7 +78,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.setItem('auth_user', JSON.stringify(result.user));
 
       return { success: true };
-    } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_error) {
       return { success: false, error: 'Registration failed' };
     }
   };
@@ -108,6 +110,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
