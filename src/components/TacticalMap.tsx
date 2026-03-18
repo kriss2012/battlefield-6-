@@ -11,25 +11,29 @@ const TacticalMap: React.FC = () => {
   ];
 
   return (
-    <div className="relative w-full aspect-[16/7] bg-black/40 rounded-[40px] border border-white/5 overflow-hidden group">
-      {/* Grid Pattern */}
-      <div className="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:20px_20px]" />
+    <div className="relative w-full aspect-[16/7] bg-black/60 rounded-[40px] border border-blue-500/20 overflow-hidden group shadow-2xl shadow-blue-900/10">
+      {/* Dynamic Grid Pattern */}
+      <div className="absolute inset-0 opacity-20 bg-[linear-gradient(to_right,#3b82f633_1px,transparent_1px),linear-gradient(to_bottom,#3b82f633_1px,transparent_1px)] bg-[size:30px_30px]" />
       
-      {/* Scanning Line Animation */}
+      {/* Trailing Scanning Line */}
       <motion.div 
-        animate={{ top: ['-10%', '110%'] }}
-        transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-        className="absolute left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500/40 to-transparent z-10"
-      />
+        animate={{ top: ['-20%', '120%'] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+        className="absolute left-0 w-full z-10"
+      >
+        <div className="h-[2px] bg-blue-400 shadow-[0_0_20px_#60a5fa]" />
+        <div className="h-24 bg-gradient-to-t from-transparent via-blue-500/10 to-transparent blur-xl" />
+      </motion.div>
 
-      {/* Stylized World Map SVG (Simplified path) */}
-      <svg className="w-full h-full opacity-20 fill-blue-500/20 stroke-blue-500/40 stroke-[0.5]" viewBox="0 0 800 400">
+      {/* World Map Background (Simplified SVG paths) */}
+      <svg className="w-full h-full opacity-30 fill-blue-500/5 stroke-blue-400/20 stroke-[0.5]" viewBox="0 0 800 400">
         <path d="M150,150 Q200,100 250,150 T350,150 M400,100 Q450,50 500,100 T600,120 M100,250 Q150,200 200,250 T300,280 M500,250 Q550,200 600,250 T700,300" 
-              className="fill-none animate-pulse" />
-        {/* Simplified continents */}
-        <rect x="120" y="80" width="120" height="150" rx="40" opacity="0.5" />
-        <rect x="380" y="60" width="200" height="180" rx="50" opacity="0.5" />
-        <rect x="580" y="150" width="100" height="150" rx="30" opacity="0.5" />
+              className="fill-none" />
+        <motion.path 
+          d="M120,100 h100 v120 h-100 z M400,80 h180 v150 h-180 z M600,180 h80 v100 h-80 z" 
+          animate={{ opacity: [0.1, 0.3, 0.1] }}
+          transition={{ duration: 4, repeat: Infinity }}
+        />
       </svg>
 
       {/* Interactive Zones */}
@@ -37,56 +41,71 @@ const TacticalMap: React.FC = () => {
         <motion.div
           key={zone.id}
           style={{ left: zone.x, top: zone.y }}
-          className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center group/zone cursor-crosshair"
+          className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center group/zone cursor-crosshair z-20"
           whileHover={{ scale: 1.2 }}
         >
-          {/* Pulse Ring */}
-          <motion.div 
-            animate={{ scale: [1, 2], opacity: [0.5, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className={`absolute w-8 h-8 rounded-full border ${
-              zone.status === 'ACTIVE' ? 'border-blue-500' : 
-              zone.status === 'ENGAGED' ? 'border-red-500' : 'border-emerald-500'
-            }`}
-          />
+          {/* Multi-ring Pulse */}
+          {[0, 1].map((i) => (
+            <motion.div 
+              key={i}
+              animate={{ scale: [1, 2.5], opacity: [0.4, 0] }}
+              transition={{ duration: 2, repeat: Infinity, delay: i * 0.8 }}
+              className={`absolute w-10 h-10 rounded-full border ${
+                zone.status === 'ACTIVE' ? 'border-blue-500' : 
+                zone.status === 'ENGAGED' ? 'border-red-500' : 'border-emerald-500'
+              }`}
+            />
+          ))}
           
-          {/* Core Dot */}
-          <div className={`w-2 h-2 rounded-full shadow-[0_0_10px_currentColor] ${
-             zone.status === 'ACTIVE' ? 'text-blue-500 bg-blue-500' : 
-             zone.status === 'ENGAGED' ? 'text-red-500 bg-red-500' : 'text-emerald-500 bg-emerald-500'
-          }`} />
+          {/* Core Dot with Pulse */}
+          <div className="relative">
+            <div className={`w-3 h-3 rounded-full shadow-[0_0_15px_currentColor] animate-pulse ${
+               zone.status === 'ACTIVE' ? 'text-blue-500 bg-blue-500' : 
+               zone.status === 'ENGAGED' ? 'text-red-500 bg-red-500' : 'text-emerald-500 bg-emerald-500'
+            }`} />
+          </div>
 
-          {/* zone label */}
-          <div className="absolute top-4 left-4 whitespace-nowrap opacity-0 group-hover/zone:opacity-100 transition-opacity bg-black/80 backdrop-blur-md p-3 border border-white/10 rounded-xl z-20 pointer-events-none">
-            <div className="flex flex-col gap-1">
-              <span className="text-[10px] font-black italic text-white uppercase tracking-tighter">{zone.name}</span>
-              <div className="flex justify-between items-center gap-8">
-                <span className="text-[8px] font-mono text-gray-500">{zone.status}</span>
-                <span className="text-[8px] font-mono text-blue-400">{zone.load}% LOAD</span>
+          {/* Enhanced Zone Label */}
+          <div className="absolute top-6 left-6 whitespace-nowrap opacity-0 group-hover/zone:opacity-100 transition-all transform group-hover/zone:translate-x-2 bg-neutral-900/90 backdrop-blur-xl p-4 border border-blue-500/30 rounded-2xl z-30 shadow-2xl">
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <span className="w-1 h-1 bg-blue-500 rounded-full" />
+                <span className="text-[12px] font-black italic text-white uppercase tracking-tighter">{zone.name}</span>
+              </div>
+              <div className="h-[1px] bg-white/10 w-full" />
+              <div className="flex justify-between items-center gap-12">
+                <span className={`text-[10px] font-mono font-bold ${
+                   zone.status === 'ENGAGED' ? 'text-red-400' : 'text-gray-400'
+                }`}>{zone.status}</span>
+                <span className="text-[10px] font-mono text-blue-400 tabular-nums">{zone.load}% LOAD</span>
+              </div>
+              <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+                <motion.div 
+                  initial={{ width: 0 }}
+                  animate={{ width: `${zone.load}%` }}
+                  className={`h-full ${zone.load > 80 ? 'bg-red-500' : 'bg-blue-500'}`}
+                />
               </div>
             </div>
           </div>
         </motion.div>
       ))}
 
-      {/* Map Metadata */}
-      <div className="absolute bottom-6 left-8 flex gap-8 font-mono text-[8px] text-white/30 tracking-[0.3em] uppercase">
-        <div className="flex items-center gap-2">
-          <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-          <span>Nodes: 2,842</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
-          <span>Active Theaters: 12</span>
-        </div>
+      {/* Metadata Readouts */}
+      <div className="absolute top-8 left-10 flex flex-col gap-1 font-mono text-[9px] text-blue-400/40 uppercase tracking-widest">
+        <span>STRAT_NET_ESTABLISHED</span>
+        <span>LATENCY_SYNC_ACTIVE [12MS]</span>
       </div>
 
-      <div className="absolute top-6 right-8 text-right font-mono text-[8px] text-white/20 tracking-[0.5em] uppercase">
-        Global Network Topology v3.2<br/>
-        Real-time Synchronization Active
+      <div className="absolute bottom-8 right-10 text-right">
+         <span className="text-[10px] font-black italic text-blue-500/60 uppercase tracking-[0.4em]">Subsurface Scan Mode</span>
+         <div className="mt-2 h-[2px] w-32 bg-gradient-to-r from-transparent to-blue-500/40 ml-auto" />
       </div>
+
+      <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_100px_rgba(0,0,0,0.5)]" />
     </div>
   );
 };
 
 export default TacticalMap;
+
