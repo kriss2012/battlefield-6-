@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Combobox, Transition } from '@headlessui/react';
 import { playerApi, analyticsApi } from '../services/api';
+import type { PlayerStats } from '../types';
 import { PlayerCache } from '../utils/playerCache';
 import { PlayerStatsSkeleton } from '../components/Skeleton';
 
@@ -13,15 +14,22 @@ const PLATFORMS = [
   { id: 'steam', name: 'Steam', icon: '⚙️' },
 ];
 
+interface PlayerSuggestion {
+  name: string;
+  player_id?: string;
+  platform?: string;
+  isGlobal?: boolean;
+}
+
 export default function PlayerSearch() {
   const [query, setQuery] = useState('');
   const [selectedPlatform, setSelectedPlatform] = useState('all');
-  const [playerStats, setPlayerStats] = useState<any>(null);
-  const [suggestions, setSuggestions] = useState<any[]>([]);
-  const [recentSearches, setRecentSearches] = useState<any[]>([]);
+  const [playerStats, setPlayerStats] = useState<PlayerStats | null>(null);
+  const [suggestions, setSuggestions] = useState<PlayerSuggestion[]>([]);
+  const [recentSearches, setRecentSearches] = useState<{ name: string; platform?: string }[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [selectedPlayer, setSelectedPlayer] = useState<any>(null);
+  const [selectedPlayer, setSelectedPlayer] = useState<PlayerSuggestion | null>(null);
 
   // Load recent searches on mount
   useEffect(() => {
@@ -33,22 +41,30 @@ export default function PlayerSearch() {
   useEffect(() => {
     const fetchSuggestions = async () => {
       if (query.trim().length >= 2) {
-        // Get local matches
-        const localMatches = PlayerCache.searchPlayers(query, 5);
-        
-        // Get global matches from backend
-        const response = await analyticsApi.getAutocomplete(query);
-        const globalMatches = response.suggestions || [];
-        
-        // Merge and deduplicate
-        const merged = [...localMatches];
-        globalMatches.forEach((gm: any) => {
-          if (!merged.find(m => m.name.toLowerCase() === gm.name.toLowerCase())) {
-            merged.push({ ...gm, isGlobal: true });
-          }
-        });
-        
-        setSuggestions(merged.slice(0, 10));
+        try {
+          // Get local matches
+          const localMatches = PlayerCache.searchPlayers(query, 5);
+          
+          // Get global matches from backend
+          const response = await analyticsApi.getAutocomplete(query);
+          const globalMatches = (response.suggestions as PlayerSuggestion[]) || [];
+          
+          // Merge and deduplicate
+          const merged: PlayerSuggestion[] = localMatches.map(lm => ({
+            ...lm,
+            isGlobal: false
+          }));
+
+          globalMatches.forEach((gm) => {
+            if (!merged.find(m => m.name.toLowerCase() === gm.name.toLowerCase())) {
+              merged.push({ ...gm, isGlobal: true });
+            }
+          });
+          
+          setSuggestions(merged.slice(0, 10));
+        } catch (_error) {
+          console.error("Failed to fetch suggestions:", _error);
+        }
       } else {
         setSuggestions([]);
       }
@@ -58,14 +74,7 @@ export default function PlayerSearch() {
     return () => clearTimeout(timer);
   }, [query]);
 
-  // Handle player selection from dropdown
-  useEffect(() => {
-    if (selectedPlayer && selectedPlayer.name) {
-      handlePlayerSelect(selectedPlayer.name);
-    }
-  }, [selectedPlayer]);
-
-  const handlePlayerSelect = async (playerName: string) => {
+  const handlePlayerSelect = useCallback(async (playerName: string) => {
     setLoading(true);
     setError('');
     setPlayerStats(null);
@@ -76,25 +85,37 @@ export default function PlayerSearch() {
       searchQuery = `${playerName}?platform=${selectedPlatform}`;
     }
 
-    // Try to fetch stats directly by name
-    const response = await playerApi.getPlayerStats(searchQuery);
+    try {
+      // Try to fetch stats directly by name
+      const response = await playerApi.getPlayerStats(searchQuery);
 
-    if (response.error || (response.data as any)?.errors) {
-      setError((response.data as any)?.errors?.[0] || response.error || 'Player not found');
-    } else if (response.data) {
-      setPlayerStats(response.data);
-      // Add to cache on successful search
-      const platformToCache = selectedPlatform !== 'all' ? selectedPlatform : undefined;
-      PlayerCache.addPlayer(playerName, platformToCache);
-      // Refresh recent searches
-      setRecentSearches(PlayerCache.getRecentSearches(5));
-      
-      // Also track this player on our backend for future global autocomplete
-      analyticsApi.trackPlayer(playerName, playerName, selectedPlatform).catch(() => {});
+      if (response.error || (response.data as { errors?: string[] })?.errors) {
+        setError((response.data as { errors?: string[] })?.errors?.[0] || response.error || 'Player not found');
+      } else if (response.data) {
+        setPlayerStats(response.data as PlayerStats);
+        // Add to cache on successful search
+        const platformToCache = selectedPlatform !== 'all' ? selectedPlatform : undefined;
+        PlayerCache.addPlayer(playerName, platformToCache);
+        // Refresh recent searches
+        setRecentSearches(PlayerCache.getRecentSearches(5));
+        
+        // Also track this player on our backend for future global autocomplete
+        analyticsApi.trackPlayer(playerName, playerName, selectedPlatform).catch(() => {});
+      }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_error) {
+      setError('An unexpected error occurred during search');
     }
 
     setLoading(false);
-  };
+  }, [selectedPlatform]);
+
+  // Handle player selection from dropdown
+  useEffect(() => {
+    if (selectedPlayer && selectedPlayer.name) {
+      handlePlayerSelect(selectedPlayer.name);
+    }
+  }, [selectedPlayer, handlePlayerSelect]); // Dependency array is correct
 
   const handleReset = () => {
     setQuery('');
@@ -191,7 +212,7 @@ export default function PlayerSearch() {
                           placeholder="Search player name..."
                           onChange={(e) => setQuery(e.target.value)}
                           onKeyPress={handleKeyPress}
-                          displayValue={(player: any) => player?.name || query}
+                          displayValue={(player: PlayerSuggestion) => player?.name || query} // Use PlayerSuggestion type
                           autoComplete="off"
                         />
                         {loading && (
@@ -324,7 +345,7 @@ export default function PlayerSearch() {
 
               {/* Stats Grid */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {Object.entries(playerStats).map(([key, value]: [string, any]) => {
+                {Object.entries(playerStats).map(([key, value]) => {
                   if (
                     typeof value === 'object' ||
                     Array.isArray(value) ||
@@ -349,7 +370,7 @@ export default function PlayerSearch() {
                       <div className="text-3xl font-black text-white italic">
                         {typeof value === 'number'
                           ? value.toLocaleString()
-                          : value?.toString() || 'N/A'}
+                          : (value as string | number | boolean | null | undefined)?.toString() || 'N/A'}
                       </div>
                     </div>
                   );
@@ -361,7 +382,7 @@ export default function PlayerSearch() {
                 <div className="glass-panel p-8">
                   <h3 className="text-2xl font-black mb-8 italic uppercase tracking-wider">Class Breakdown</h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    {playerStats.classes.map((classData: any, index: number) => (
+                    {playerStats.classes.map((classData: { className?: string; kills?: number }, index: number) => (
                       <div key={index} className="space-y-2 group">
                         <div className="text-xs text-gray-500 font-black uppercase tracking-tighter group-hover:text-blue-400 transition-colors">
                           {classData.className || `Specialist ${index + 1}`}
@@ -369,7 +390,7 @@ export default function PlayerSearch() {
                         <div className="bg-white/5 rounded-xl h-2 overflow-hidden">
                           <div 
                             className="h-full bg-blue-600 shadow-[0_0_15px_rgba(37,99,235,0.5)] transition-all duration-1000"
-                            style={{ width: `${Math.min(100, (classData.kills / 1000) * 100)}%` }}
+                            style={{ width: `${Math.min(100, ((classData.kills || 0) / 1000) * 100)}%` }}
                           />
                         </div>
                         <div className="text-2xl font-black italic">{classData.kills?.toLocaleString() || 0} <span className="text-[10px] non-italic text-gray-600 ml-1">KILLS</span></div>
