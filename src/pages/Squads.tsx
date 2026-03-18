@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { socialApi } from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -24,13 +24,7 @@ export default function Squads() {
   const [newSquad, setNewSquad] = useState({ name: '', tag: '', description: '', isPublic: true });
   const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
 
-  useEffect(() => {
-    if (token) {
-      loadSquadData();
-    }
-  }, [token]);
-
-  const loadSquadData = async () => {
+  const loadSquadData = useCallback(async () => {
     setLoading(true);
     try {
       const [publicRes, myRes] = await Promise.all([
@@ -39,12 +33,18 @@ export default function Squads() {
       ]);
       if (publicRes.squads) setPublicSquads(publicRes.squads);
       if (myRes.squads) setMySquads(myRes.squads);
-    } catch (error) {
-      console.error('Failed to load squad data:', error);
+    } catch (_error) {
+      console.error('Failed to load squad data:', _error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
+
+  useEffect(() => {
+    if (token) {
+      loadSquadData();
+    }
+  }, [token, loadSquadData]);
 
   const handleCreateSquad = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,7 +58,8 @@ export default function Squads() {
         setNewSquad({ name: '', tag: '', description: '', isPublic: true });
         loadSquadData();
       }
-    } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_error) {
       setMessage({ text: 'Deployment failed', type: 'error' });
     }
     setTimeout(() => setMessage(null), 3000);
@@ -73,7 +74,8 @@ export default function Squads() {
         setMessage({ text: 'Successfully joined squad!', type: 'success' });
         loadSquadData();
       }
-    } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_error) {
       setMessage({ text: 'Failed to join squad', type: 'error' });
     }
     setTimeout(() => setMessage(null), 3000);
