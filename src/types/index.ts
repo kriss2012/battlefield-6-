@@ -7,13 +7,19 @@ export interface Player {
 export interface PlayerStats {
   playerId: string;
   playerName: string;
+  userName?: string;
   kills?: number;
   deaths?: number;
   wins?: number;
   losses?: number;
   accuracy?: number;
   score?: number;
-  // Add more fields based on actual API response
+  avatar?: string;
+  classes?: Array<{
+    className?: string;
+    kills?: number;
+  }>;
+  [key: string]: unknown;
 }
 
 // Server Types
@@ -36,7 +42,7 @@ export interface Server {
 
 export interface DetailedServer extends Server {
   description?: string;
-  settings?: Record<string, any>;
+  settings?: Record<string, string | number | boolean>;
   rotation?: string[];
   // Add more fields based on actual API response
 }
