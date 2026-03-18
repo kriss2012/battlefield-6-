@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { serverApi } from '../services/api';
+import type { Server } from '../types';
 
 export default function ServerBrowser() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [servers, setServers] = useState<any[]>([]);
+  const [servers, setServers] = useState<Server[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -16,17 +17,24 @@ export default function ServerBrowser() {
   const loadServers = async (name: string) => {
     setLoading(true);
     setError('');
-    const response = await serverApi.getServers(name, 30);
+    try {
+      const response = await serverApi.getServers(name, 30);
 
-    if (response.error) {
-      setError(response.error);
+      if (response.error) {
+        setError(response.error);
+        setServers([]);
+      } else if (response.data) {
+        const serverData = (response.data as { servers?: Server[] }).servers || [];
+        setServers(serverData);
+      }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (err) {
+      setError('Failed to load servers. Please try again.');
       setServers([]);
-    } else if (response.data) {
-      const serverData = (response.data as any).servers || [];
-      setServers(serverData);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   const handleSearch = async (e: React.FormEvent) => {
@@ -84,9 +92,9 @@ export default function ServerBrowser() {
             </div>
           ) : (
             <div className="space-y-4">
-              {servers.map((server: any) => (
+              {servers.map((server: Server) => (
                 <div
-                  key={server.serverId}
+                  key={server.serverId || server.id}
                   className="bg-gray-800 border border-gray-700 rounded-lg p-6 hover:border-blue-500 transition-colors"
                 >
                   <div className="flex justify-between items-start mb-3">
