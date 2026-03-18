@@ -107,7 +107,6 @@
   .tactical-glow {
     box-shadow: 0 0 15px var(--glow-color, rgba(59, 130, 246, 0.4));
   }
-}
 
 .noise-overlay {
   position: fixed;
