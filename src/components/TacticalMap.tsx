@@ -13,7 +13,7 @@ const TacticalMap: React.FC = () => {
   return (
     <div className="relative w-full aspect-[16/7] bg-black/60 rounded-[40px] border border-blue-500/20 overflow-hidden group shadow-2xl shadow-blue-900/10">
       {/* Dynamic Grid Pattern */}
-      <div className="absolute inset-0 opacity-20 bg-[linear-gradient(to_right,#3b82f633_1px,transparent_1px),linear-gradient(to_bottom,#3b82f633_1px,transparent_1px)] bg-[size:30px_30px]" />
+      <div className="absolute inset-0 opacity-20 bg-[linear-gradient(to_right,rgba(59,130,246,0.1)_1px,transparent_1px),linear-gradient(to_bottom,rgba(59,130,246,0.1)_1px,transparent_1px)] bg-[size:30px_30px]" />
       
       {/* Trailing Scanning Line */}
       <motion.div 
