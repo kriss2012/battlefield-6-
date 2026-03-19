@@ -11,7 +11,7 @@ import {
   Sphere,
   Plane
 } from '@react-three/drei';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import TacticalHUD from '../components/TacticalHUD';
 import * as THREE from 'three';
 
