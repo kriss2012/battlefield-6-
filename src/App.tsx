@@ -16,6 +16,8 @@ import Friends from './pages/Friends';
 import Squads from './pages/Squads';
 import Leaderboard from './pages/Leaderboard';
 import Armory from './pages/Armory';
+import Campaign from './pages/Campaign';
+import Simulation from './pages/Simulation';
 
 function App() {
   return (
@@ -32,6 +34,8 @@ function App() {
             <Route path="/head-to-head" element={<HeadToHead />} />
             <Route path="/forge" element={<NeuralForge />} />
             <Route path="/armory" element={<Armory />} />
+            <Route path="/campaign" element={<Campaign />} />
+            <Route path="/simulation" element={<Simulation />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route
