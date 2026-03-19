@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import ArmoryView from '../components/ArmoryView';
 
 const Armory: React.FC = () => {
