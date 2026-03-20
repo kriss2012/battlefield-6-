@@ -8,7 +8,6 @@ import {
   PerspectiveCamera,
   useKeyboardControls,
   KeyboardControls,
-  Sphere,
   Plane
 } from '@react-three/drei';
 import { motion } from 'framer-motion';
