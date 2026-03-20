@@ -7,12 +7,15 @@ import * as THREE from 'three';
 const NeuralCore: React.FC = () => {
   const meshRef = useRef<THREE.Mesh>(null!);
   const outerRef = useRef<THREE.Mesh>(null!);
+  const wireRef = useRef<THREE.Mesh>(null!);
 
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
     meshRef.current.rotation.x = time * 0.2;
     meshRef.current.rotation.y = time * 0.3;
     outerRef.current.rotation.z = -time * 0.1;
+    wireRef.current.rotation.y = -time * 0.4;
+    wireRef.current.rotation.x = time * 0.1;
   });
 
   return (
@@ -25,31 +28,47 @@ const NeuralCore: React.FC = () => {
           distort={0.4}
           radius={1}
           emissive="#1e40af"
-          emissiveIntensity={0.5}
-          metalness={0.8}
-          roughness={0.2}
+          emissiveIntensity={0.8}
+          metalness={0.9}
+          roughness={0.1}
+        />
+      </Sphere>
+
+      {/* Wireframe Shell */}
+      <Sphere ref={wireRef} args={[1.8, 32, 32]}>
+        <meshStandardMaterial 
+          color="#60a5fa" 
+          wireframe 
+          transparent 
+          opacity={0.3} 
+          emissive="#60a5fa"
+          emissiveIntensity={2}
         />
       </Sphere>
 
       {/* Outer Wobbling Ring */}
-      <TorusKnot ref={outerRef} args={[2.5, 0.05, 256, 32]}>
+      <TorusKnot ref={outerRef} args={[2.5, 0.02, 256, 32]}>
         <MeshWobbleMaterial
           color="#10b981"
-          factor={0.6}
+          factor={0.8}
           speed={2}
           emissive="#065f46"
-          emissiveIntensity={2}
+          emissiveIntensity={3}
         />
       </TorusKnot>
 
-      {/* Floating Particles/Dots (Simulated with small spheres) */}
-      {[...Array(20)].map((_, i) => (
-        <Sphere key={i} args={[0.05]} position={[
-          Math.sin(i) * 4,
-          Math.cos(i) * 4,
-          Math.sin(i * 0.5) * 2
+      {/* Dynamic Particles */}
+      {[...Array(40)].map((_, i) => (
+        <Sphere key={i} args={[0.03]} position={[
+          Math.sin(i * 0.5) * (4 + Math.sin(i)),
+          Math.cos(i * 0.5) * (4 + Math.cos(i)),
+          Math.sin(i * 0.2) * 3
         ]}>
-          <meshStandardMaterial color="#60a5fa" emissive="#60a5fa" emissiveIntensity={2} />
+          <meshStandardMaterial 
+            color={i % 2 === 0 ? "#60a5fa" : "#34d399"} 
+            emissive={i % 2 === 0 ? "#60a5fa" : "#34d399"} 
+            emissiveIntensity={4} 
+          />
         </Sphere>
       ))}
     </group>
