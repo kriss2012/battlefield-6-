@@ -25,37 +25,16 @@ export const storyData: Record<string, Scene> = {
   s1_intro: {
     chapter: "CHAPTER ONE — THE BOY WHO DISAPPEARED",
     title: "NAGPUR, 2009",
-    text: "The city of Nagpur woke up every morning in the same way it always had — with the smell of chai and diesel, the sound of auto-rickshaws, and the slow grinding noise of a million people beginning their days. Aryan Sharma was sixteen years old, and he had been disappearing for two years.",
+    text: "The city of Nagpur woke up every morning in the same way it always had — with the smell of chai and diesel, the sound of auto-rickshaws arguing with bicycles at intersections. Aryan Sharma was sixteen years old and had been disappearing for two years. Not literally, but interiorly. The slow erasure of a self under sustained, relentless pressure.",
     art: "schoolyard",
     choices: [
-      { text: "Continue through the school gates", goto: "s1_st_xavier" }
-    ]
-  },
-  s1_st_xavier: {
-    chapter: "CHAPTER ONE — THE BOY WHO DISAPPEARED",
-    title: "ST. XAVIER'S SENIOR SECONDARY",
-    text: "Aryan walked the corridors like a ghost. His teachers marked him present. His classmates registered his existence the way you register a piece of furniture — it's there; you work around it, you don't actually see it. The disappearing was interior. The slow erasure of a self under sustained pressure.",
-    art: "schoolyard",
-    choices: [
-      { text: "Head to the classroom", goto: "s1_kabir_intro" }
-    ]
-  },
-  s1_kabir_intro: {
-    chapter: "CHAPTER ONE — THE BOY WHO DISAPPEARED",
-    title: "THE PREDATOR",
-    text: "Kabir Rao was seventeen, broad-shouldered, and possessed of the particular kind of confidence that grows in a boy who has never been told no. His father, Durgesh Rao, was an MLA. Kabir had absorbed his father's power like a second inheritance. He had chosen Aryan in the second semester of eighth grade.",
-    art: "schoolyard",
-    portrait: "kabir",
-    speaker: "KABIR RAO",
-    choices: [
-      { text: "Avoid eye contact", goto: "s1_library" },
-      { text: "Take the side entrance", goto: "s1_library" }
+      { text: "Head into St. Xaviers", goto: "s1_library" }
     ]
   },
   s1_library: {
     chapter: "CHAPTER ONE — THE BOY WHO DISAPPEARED",
     title: "THE LIBRARY PASSAGE",
-    text: "Kabir and his associates, Dev and Prashant, were waiting. 'Look at this. The ghost is trying a new path,' Kabir sneered. He took Aryan's bag, held it upside down, and shook it. Books, a lunch box, and a folded drawing fell. The drawing was of Aryan's mother, laughing. Kabir tore it in half.",
+    text: "He did not make it through the library passage. Kabir Rao and his associates were waiting. 'Look at this. The ghost is trying a new path.' Kabir took Aryan's bag, held it upside down, and shook it. Out fell his things, including a drawing of his mother. Kabir picked it up and Tore. It. In. Half.",
     art: "schoolyard",
     portrait: "kabir",
     speaker: "KABIR RAO",
@@ -67,195 +46,195 @@ export const storyData: Record<string, Scene> = {
   s1_home: {
     chapter: "CHAPTER ONE — THE BOY WHO DISAPPEARED",
     title: "LAXMI NAGAR ROAD",
-    text: "Home was a two-bedroom flat on the third floor. His mother, Savita, was teaching third grade at Sunrise Primary. She had been raising Aryan alone since he was seven. She looked at him over chai, sensing the stillness in him. 'He tore the drawing,' Aryan said. 'One day,' she replied gently, 'you will not need to take the long road home.'",
+    text: "Home was a flat that smelled of cooking from fifteen different kitchens. His mother, Savita, was waiting with chai. She sensing the stillness in him. 'He tore the drawing. The one of you,' Aryan said. Savita looked at him steadily. 'Aryan, one day you will not need to take the long road home.'",
     art: "schoolyard",
     portrait: "savita",
     speaker: "SAVITA SHARMA",
     choices: [
-      { text: "Two years later...", goto: "s2_gym_discovery" }
+      { text: "Two years of weight later...", goto: "s2_gym" }
     ]
   },
 
   // CHAPTER 2: THE WEIGHT OF WATER
-  s2_gym_discovery: {
+  s2_gym: {
     chapter: "CHAPTER TWO — THE WEIGHT OF WATER",
-    title: "NEHRU STREET",
-    text: "Two years of Kabir's systematic attention had made the harassment a geography Aryan navigated with practiced caution. In October of his sixteenth year, he found a gym above a tailor shop. He heard the rhythmic thud of someone working a bag and couldn't walk away. He went up.",
-    art: "warehouse",
-    choices: [
-      { text: "Enter the gym", goto: "s2_balwant_intro" }
-    ]
-  },
-  s2_balwant_intro: {
-    chapter: "CHAPTER TWO — THE WEIGHT OF WATER",
-    title: "THE OLD SOLDIER",
-    text: "Balwant Singh, sixty-four, moved like fifty and thought like forty. He had cauliflower ears and hands of a craftsman. He looked at Aryan once. 'Hit it until it hurts you back,' he said, pointing at a heavy bag.",
+    title: "THE GYM ON NEHRU STREET",
+    text: "He passed the gym above the tailor shop and heard the rhythmic thud. He went up. Balwant Singh, a man with cauliflower ears and the quality of disciplined stillness, pointed at the bag. 'Hit it until it hurts you back.'",
     art: "warehouse",
     portrait: "balwant",
     speaker: "BALWANT SINGH",
     choices: [
       { text: "Hit the bag until your hands bleed", goto: "s2_training", raiseRage: true },
-      { text: "Focus on the technique he shows you", goto: "s2_training", unlockSkill: "combat" }
+      { text: "Focus on the technique and precision", goto: "s2_training", unlockSkill: "combat" }
     ]
   },
   s2_training: {
     chapter: "CHAPTER TWO — THE WEIGHT OF WATER",
-    title: "THE MAKING OF A WEAPON",
-    text: "Over the months, Aryan trained with the intensity of someone converting unspeakable rage into something physical. Balwant taught him footwork, spatial awareness, and the geometry of a room. 'You're not training,' Balwant warned. 'You're punishing yourself. Punishment makes you rawer. Training makes you sharper.'",
+    title: "PUNISHMENT VS TRAINING",
+    text: "Aryan practiced until he understood what Balwant saw. 'You're not training. You're punishing yourself,' Balwant said. 'Punishment makes you rawer. Training makes you sharper. Only one will help you when the moment comes.'",
     art: "warehouse",
     portrait: "balwant",
     speaker: "BALWANT SINGH",
     choices: [
-      { text: "Learn to be sharp", goto: "s2_map_handover", unlockSkill: "intel" },
-      { text: "Embrace the raw power", goto: "s2_map_handover", raiseRage: true }
+      { text: "Accept the training", goto: "s2_map", unlockSkill: "intel" }
     ]
   },
-  s2_map_handover: {
+  s2_map: {
     chapter: "CHAPTER TWO — THE WEIGHT OF WATER",
     title: "THE GIFT",
-    text: "One evening, Balwant handed him a folded piece of paper. 'From a friend,' he said. 'In case you ever need to find someone.' It was a detailed map of Nagpur, with ISF operations marked in red. Aryan folded it and put it in his bag, not asking any questions.",
+    text: "Balwant handed him a map of Nagpur marked in red. 'From a friend. In case you ever need to find someone.' It was the most comprehensive private intelligence document on ISF's operations in existence.",
     art: "warehouse",
     portrait: "balwant",
     speaker: "BALWANT SINGH",
     choices: [
-      { text: "CHAPTER THREE", goto: "s3_wallet_theft" }
+      { text: "CHAPTER THREE: THE STONE MOVES", goto: "s3_wallet" }
     ]
   },
 
   // CHAPTER 3: THE DAY THE STONE MOVED
-  s3_wallet_theft: {
+  s3_wallet: {
     chapter: "CHAPTER THREE — THE DAY THE STONE MOVED",
-    title: "ST. XAVIER'S WORKSHOP SHED",
-    text: "A Thursday in March. Kabir had taken Aryan's wallet two days earlier. He held it up now, producing a photograph of Savita. 'I've been carrying this for two days,' Kabir mocked. 'Your mummy's kind of pretty, you know? Maybe we pay her a visit sometime. Tell her how her son is doing.'",
+    title: "THE WORKSHOP SHED",
+    text: "Kabir held up a photograph of Savita. 'Your mummy's kind of pretty, you know? For a teacher. Maybe we pay her a visit.' Something happened in Aryan. Not an explosion, but a subsidence. The ground gave way, and absolute clarity took its place.",
     art: "firstfight",
     portrait: "kabir",
     speaker: "KABIR RAO",
     choices: [
-      { text: "Wait for the moment", goto: "s3_confrontation" }
-    ]
-  },
-  s3_confrontation: {
-    chapter: "CHAPTER THREE — THE DAY THE STONE MOVED",
-    title: "THE SUBSIDENCE",
-    text: "The ground of careful compliance simply gave way. Aryan felt an absolute, almost scientific clarity. He moved before Kabir could react. Two years of Balwant's training produced the movement without conscious direction.",
-    art: "firstfight",
-    choices: [
-      { text: "[COMBAT] Strike Kabir's solar plexus", goto: "s3_victory", tag: "fight", setFought: true },
-      { text: "[STEALTH] Use Dev's momentum against the wall", goto: "s3_victory", tag: "stealth", setFought: true }
+      { text: "Move before he realizes", goto: "s3_victory", tag: "fight", setFought: true }
     ]
   },
   s3_victory: {
     chapter: "CHAPTER THREE — THE DAY THE STONE MOVED",
-    title: "THE SHIFT",
-    text: "Kabir folded. Dev went down. Prashant ran. Aryan picked up the photograph of his mother and put it back in his wallet. 'Stay away from me,' he said, his voice terrifyingly calm. 'Stay away from my mother.' He walked out the side gate and took the short road home.",
+    title: "THE RECKONING",
+    text: "Kabir folded from a solar plexus strike. Dev hit the wall. Prashant ran. Aryan picked up the photo. 'Stay away from me. Stay away from my mother,' he said. The geometry of power at St. Xavier's had shifted forever.",
     art: "firstfight",
     choices: [
-      { text: "The machinery wakes...", goto: "s4_isf_intro" }
+      { text: "The machinery wakes...", goto: "s4_isf" }
     ]
   },
-  // To be continued...
-  s4_isf_intro: {
+
+  // CHAPTER 4: THE IRON SHADOW FRONT
+  s4_isf: {
     chapter: "CHAPTER FOUR — THE IRON SHADOW FRONT",
-    title: "THE DIRECTOR'S REACH",
-    text: "The Iron Shadow Front (ISF) was the largest criminal organization in central India. Durgesh Rao, Kabir's father, called them to handle the humiliation. They didn't plan a direct hit. They planned pressure. But they didn't know what the silence of Aryan Sharma was made of.",
+    title: "THE MACHINE",
+    text: "ISF began as an off-book intel network from Colonel Sengupta. It grew into a monster. Durgesh Rao called them. They didn't anticipate what kind of person was standing behind those two years of silence. The coal compresses. The pressure builds.",
     art: "warehouse",
     choices: [
-      { text: "[CONTINUE TO CHAPTER 5]", goto: "s5_empty_kitchen" }
+      { text: "Go home", goto: "s5_empty" }
     ]
   },
-  s5_empty_kitchen: {
+
+  // CHAPTER 5: THE EMPTY KITCHEN
+  s5_empty: {
     chapter: "CHAPTER FIVE — THE EMPTY KITCHEN",
     title: "THE BROKEN CHAIN",
-    text: "A Wednesday evening in April. The door to the flat was open. The chain lock was broken. The chai pot was still warm on the stove. His mother was gone. On the refrigerator, Aryan found three letters scratched into the paint: 'ISF'. She had left him a name.",
+    text: "The flat door was open. The chain lock was broken. The chai pot was thick and overcooked. His mother was gone. On the refrigerator, three letters were scratched into the white paint: ISF. She had left him a name.",
     art: "kidnap",
     choices: [
-      { text: "Call Balwant", goto: "s5_balwant_call" }
+      { text: "Gather yourself and call Balwant", goto: "s5_briefing" }
     ]
   },
-  s5_balwant_call: {
+  s5_briefing: {
     chapter: "CHAPTER FIVE — THE EMPTY KITCHEN",
-    title: "THE GATHERING",
-    text: "Balwant had the map spread out. 'They'll have taken her to Safehouse 3 in the textile district,' he said. 'She won't stay there long. Three days. After that, the protocol changes. We need to move.'",
+    title: "SAFEHOUSE 3",
+    text: "Balwant tapped the map. 'Safehouse 3. Textile district. She won't stay there long. We need to move before the three-day window closes.' Balwant finally told him about RAW, about ISF's history, and why he'd been waiting for Aryan.",
     art: "warehouse",
     portrait: "balwant",
     speaker: "BALWANT SINGH",
     choices: [
-      { text: "Enter the Textile District", goto: "s6_warehouse_infil" }
+      { text: "Start the hunt", goto: "s6_infil" }
     ]
   },
-  s6_warehouse_infil: {
-    chapter: "CHAPTER SIX — THE TEXTILE DISTRICT",
-    title: "SAFEHOUSE 3",
-    text: "Aryan went in at two in the morning. Using an acoustic distraction from Balwant, he bypassed the cameras and entered the service door. He confronted Veer Choudhary, the logistics coordinator. 'Safehouse 7,' Veer whispered. 'District 7. Basement level.'",
+
+  // CHAPTER 6: INTO THE TEXTILE DISTRICT
+  s6_infil: {
+    chapter: "CHAPTER SIX — INTO THE TEXTILE DISTRICT",
+    title: "THE SERVICE ENTRANCE",
+    text: "Aryan hit the warehouse at 2 AM. He moved through camera gaps and neutralized the guards with Balwant's 'thoughtful application of pressure'. He pinned Veer Choudhary, the logistics coordinator, to his desk.",
     art: "warehouse",
-    portrait: "aryan_shadow",
+    speaker: "ARYAN",
     choices: [
-      { text: "Head to District 7", goto: "s7_district7" }
+      { text: "'Where is she?'", goto: "s6_veer" }
     ]
   },
-  s7_district7: {
+  s6_veer: {
+    chapter: "CHAPTER SIX — INTO THE TEXTILE DISTRICT",
+    title: "VEER'S CALCULATION",
+    text: "Veer looked at Aryan's eyes and saw no bluff. 'District 7,' Veer whispered. 'Basement level. She was moved within the hour.' Aryan looked at him. 'Go home tonight. Stay home tomorrow.'",
+    art: "warehouse",
+    choices: [
+      { text: "Head to District 7", goto: "s7_basement" }
+    ]
+  },
+
+  // CHAPTER 7: FORTY-SEVEN HOURS
+  s7_basement: {
     chapter: "CHAPTER SEVEN — FORTY-SEVEN HOURS",
-    title: "THE FORTY-SEVENTH HOUR",
-    text: "The basement of the District 7 compound. Concrete, industrial lighting, the smell of water. He found her in the fourth room. She was sitting against the wall, her hands cold. 'Aryan,' she whispered. 'You were always exactly enough. Remember that.'",
+    title: "BASEMENT LEVEL TWO",
+    text: "He reached the compound at hour 47. He fought through the ground floor, taking a knife across the shoulder. He found the fourth room. Savita was there, sitting against the wall. Her hands were ice cold.",
+    art: "final",
+    choices: [
+      { text: "Reach for her", goto: "s7_farewell" }
+    ]
+  },
+  s7_farewell: {
+    chapter: "CHAPTER SEVEN — FORTY-SEVEN HOURS",
+    title: "ENOUGH",
+    text: "Savita looked at him with the face from the photograph. 'I am so proud of you. Don't lose the boy who draws entirely. You were always exactly enough. Remember that.' She died in the corridor, holding his arm.",
     art: "final",
     portrait: "savita",
     speaker: "SAVITA SHARMA",
     choices: [
-      { text: "Witness the end", goto: "s7_mother_death" }
+      { text: "Then he stood up. Then he began.", goto: "s8_war" }
     ]
   },
-  s7_mother_death: {
-    chapter: "CHAPTER SEVEN — FORTY-SEVEN HOURS",
-    title: "THE RECKONING BEGINS",
-    text: "She died in the corridor, holding his arm. Aryan carried her out. He sat in the kitchen until morning. Then he stood up. Then he began. 'Every single one of you,' he whispered to the silence.",
-    art: "final",
-    choices: [
-      { text: "Take down ISF", goto: "s8_reckoning" }
-    ]
-  },
-  s8_reckoning: {
+
+  // CHAPTER 8: THE RECKONING
+  s8_war: {
     chapter: "CHAPTER EIGHT — THE RECKONING",
     title: "THE LONG ARITHMETIC",
-    text: "For four months, Aryan dismantled ISF piece by piece. Logistics, money laundering, safehouses. He worked with Balwant, Priya, and an honest inspector named Suresh. He was hurt, but he kept going. He visited the cemetery every week with marigolds.",
+    text: "For four months, Aryan was a ghost in the city's machine. He dismantled supply lines, leaked money laundering records to Arif Khan, and worked with Priya to cripple ISF's signals. Every week, he brought marigolds to the cemetery.",
     art: "final",
     choices: [
-      { text: "Target: Durgesh Rao", goto: "s9_durgesh_fall" },
-      { text: "Target: Commander Hasan", goto: "s9_hasan_fight" }
+      { text: "Target: Durgesh Rao", goto: "s9_durgesh" },
+      { text: "Target: Commander Hasan", goto: "s9_hasan" }
     ]
   },
-  s9_durgesh_fall: {
+  s9_durgesh: {
     chapter: "CHAPTER NINE — THE LAST THREE",
-    title: "THE FALL OF THE MLA",
-    text: "Aryan leaked a file of eleven years of ISF connections to Arif Khan. The stories broke simultaneously. Durgesh Rao resigned and was arrested. Kabir was sent away to Pune. One down.",
+    title: "THE POLITICAL FALL",
+    text: "Durgesh Rao resigned citing 'health reasons' before the arrest warrants hit. The file Aryan built was conclusive. Eleven years of corruption ended in eleven days. One down. Kabir fled to Pune.",
     art: "warehouse",
     choices: [
-      { text: "Next: Commander Hasan", goto: "s9_hasan_fight" }
+      { text: "Next: Commander Hasan", goto: "s9_hasan" }
     ]
   },
-  s9_hasan_fight: {
+  s9_hasan: {
     chapter: "CHAPTER NINE — THE LAST THREE",
-    title: "COMMANDER HASAN",
-    text: "A confrontation at a villa in the hills. The fight lasted eleven minutes. Hasan was professional, but Aryan refused to be beaten. 'I'm trying to destroy what you are,' Aryan said as Hasan fell. Two down.",
+    title: "THE ELEVEN-MINUTE FIGHT",
+    text: "Hasan's villa in the hills. The fight was brutal, two professionals trading damage. 'One boy cannot destroy what we built,' Hasan spat. Aryan refused to stay down. 'I'm trying to destroy what you are.' Two down.",
     art: "final",
     choices: [
-      { text: "Force the Director out", goto: "s10_director_meeting" }
+      { text: "Force the Director's hand", goto: "s10_final" }
     ]
   },
-  s10_director_meeting: {
+  s10_final: {
     chapter: "CHAPTER TEN — THE MAN WHO BUILT THE MACHINE",
-    title: "THE TOP FLOOR",
-    text: "The Director was old, impeccably dressed. He didn't resist. He handed Aryan a flash drive. 'I am tired of the arithmetic,' he said. 'What happened to your mother was not acceptable. I am finished.'",
+    title: "DISTRICT 7 HEADQUARTERS",
+    text: "He entered the HQ alone. The Director was waiting. No guards. Just a man tired of the arithmetic. He handed Aryan a flash drive containing everything remaining of ISF. 'What happened to your mother was not acceptable. I am finished.'",
     art: "final",
     portrait: "director",
     speaker: "THE DIRECTOR",
     choices: [
-      { text: "Restrain him and call the Inspector", goto: "s_epilogue" }
+      { text: "Finish it", goto: "s_epilogue" }
     ]
   },
+
+  // EPILOGUE
   s_epilogue: {
     chapter: "EPILOGUE — THE SHORT ROAD HOME",
     title: "SHADOW RISING",
-    text: "ISF collapsed. Three hundred arrests across seventeen cities. Aryan found a new room, two kilometers away. He went back to the gym. He started drawing again. 'Tell me about the other cities,' he told Balwant one evening. The Shadow was just beginning.",
+    text: "ISF collapsed. 300 arrests. Aryan stayed in the gym, practicing, drawing. 'Tell me about the other cities,' he told Balwant. He had found a new reason to exist. The Shadow was rising.",
     art: "schoolyard",
     choices: [
       { text: "THE END", goto: "RESTART" }
