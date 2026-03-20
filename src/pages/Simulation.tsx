@@ -176,9 +176,9 @@ const Simulation: React.FC = () => {
               animate={{ scale: 1, opacity: 1 }}
               className="glass-card p-12 text-center max-w-md"
             >
-              <h2 className="text-4xl font-black italic uppercase mb-4 tracking-tighter">Tactical <span className="text-blue-500">Sim</span></h2>
+              <h2 className="text-4xl font-black italic uppercase mb-4 tracking-tighter">Neural <span className="text-blue-500">Forge</span></h2>
               <p className="text-gray-400 text-sm mb-8 font-medium">
-                Welcome to the Virtual Neural Range. Objective: Eliminate all thermal signatures. Movement: WASD. Aim: Mouse. Shoot: Click.
+                Welcome to Balwant's training module. Objective: Neutralize all ISF thermal signatures with maximum precision. Punishment is for pain; training is for results. Movement: WASD. Aim: Mouse. Shoot: Click.
               </p>
               <button 
                 onClick={(e) => {
