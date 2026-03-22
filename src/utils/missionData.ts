@@ -15,6 +15,28 @@ export interface Mission {
 
 export const missions: Mission[] = [
   {
+    id: 'm0',
+    title: 'THE WORKSHOP SHED',
+    location: 'ST. XAVIER\'S, NAGPUR',
+    difficulty: 'EASY',
+    status: 'AVAILABLE',
+    description: 'Face Kabir Rao and his associates behind the school workshop shed.',
+    objectives: [
+      'Neutralize the thermal signatures (Dev & Prashant).',
+      'Confront Kabir Rao.',
+      'Recover the photograph.'
+    ],
+    rewards: [
+      '500 XP',
+      'Trait: Scientific Clarity',
+      'Art: The Tattered Drawing'
+    ],
+    briefing: {
+      commander: 'BALWANT SINGH',
+      text: 'This is the moment, Aryan. Kabir has your photograph. He’s waiting in the shadows. Use what I’ve taught you: move before they do. Hit the solar plexus, ignore the noise. Bring that picture back.'
+    }
+  },
+  {
     id: 'm1',
     title: 'THE TEXTILE DISTRICT',
     location: 'NAGPUR, INDIA',
