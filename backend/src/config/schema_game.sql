@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS game_saves (
+  id SERIAL PRIMARY KEY,
+  user_id VARCHAR(255) UNIQUE NOT NULL,
+  current_scene VARCHAR(255) NOT NULL,
+  rage INT DEFAULT 0,
+  resolve INT DEFAULT 0,
+  skills JSONB DEFAULT '[]',
+  item_ids JSONB DEFAULT '[]',
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
