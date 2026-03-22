@@ -10,6 +10,7 @@ import leaderboardRoutes from './routes/leaderboard';
 import authRoutes from './routes/auth';
 import socialRoutes from './routes/social';
 import notificationRoutes from './routes/notifications';
+import gameRoutes from './routes/game';
 import { startCronJobs } from './services/cronJobs';
 
 dotenv.config();
@@ -39,6 +40,7 @@ app.use('/api/stats', statsRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/api/social', socialRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/game', gameRoutes);
 
 // Health check
 app.get('/health', async (req, res) => {
