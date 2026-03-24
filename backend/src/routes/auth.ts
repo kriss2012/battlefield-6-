@@ -2,28 +2,15 @@ import express from 'express';
 import pool from '../config/database';
 import { hashPassword, comparePassword, generateToken } from '../utils/auth';
 import { authenticateToken, AuthRequest } from '../middleware/auth';
+import { validate } from '../middleware/validate';
+import { registerSchema, loginSchema, changePasswordSchema } from '../schemas/auth';
 
 const router = express.Router();
 
 // Register new user
-router.post('/register', async (req, res) => {
+router.post('/register', validate(registerSchema), async (req, res) => {
   try {
     const { username, email, password, playerName, playerId } = req.body;
-
-    // Validation
-    if (!username || !email || !password) {
-      return res.status(400).json({ error: 'Username, email, and password are required' });
-    }
-
-    if (password.length < 6) {
-      return res.status(400).json({ error: 'Password must be at least 6 characters long' });
-    }
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ error: 'Invalid email format' });
-    }
 
     // Check if user already exists
     const existingUser = await pool.query(
@@ -74,13 +61,9 @@ router.post('/register', async (req, res) => {
 });
 
 // Login
-router.post('/login', async (req, res) => {
+router.post('/login', validate(loginSchema), async (req, res) => {
   try {
     const { username, password } = req.body;
-
-    if (!username || !password) {
-      return res.status(400).json({ error: 'Username and password are required' });
-    }
 
     // Find user (allow login with username or email)
     const result = await pool.query(
@@ -181,17 +164,9 @@ router.put('/profile', authenticateToken, async (req: AuthRequest, res) => {
 });
 
 // Change password (requires authentication)
-router.put('/change-password', authenticateToken, async (req: AuthRequest, res) => {
+router.put('/change-password', authenticateToken, validate(changePasswordSchema), async (req: AuthRequest, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
-
-    if (!currentPassword || !newPassword) {
-      return res.status(400).json({ error: 'Current password and new password are required' });
-    }
-
-    if (newPassword.length < 6) {
-      return res.status(400).json({ error: 'New password must be at least 6 characters long' });
-    }
 
     // Get current user
     const userResult = await pool.query(
