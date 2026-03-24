@@ -1,3 +1,4 @@
+import express from 'express';
 import pool from '../config/database';
 import { fetchAndStorePlayerStats, addTrackedPlayer } from '../services/statsCollector';
 import { generateRecommendations } from '../services/aiAnalytics';
