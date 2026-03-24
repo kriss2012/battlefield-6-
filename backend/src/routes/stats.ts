@@ -1,14 +1,15 @@
-import express from 'express';
 import pool from '../config/database';
 import { fetchAndStorePlayerStats, addTrackedPlayer } from '../services/statsCollector';
 import { generateRecommendations } from '../services/aiAnalytics';
 import { collectAllTrackedPlayerStats } from '../services/cronJobs';
 import { authenticateToken } from '../middleware/auth';
+import { validate } from '../middleware/validate';
+import { playerIdParamSchema, trendQuerySchema, compareSchema, trackSchema } from '../schemas/stats';
 
 const router = express.Router();
 
 // Get historical stats for a player
-router.get('/history/:playerId', async (req, res) => {
+router.get('/history/:playerId', validate(trendQuerySchema), async (req, res) => {
   try {
     const { playerId } = req.params;
     const { days = 30 } = req.query;
@@ -32,7 +33,7 @@ router.get('/history/:playerId', async (req, res) => {
 });
 
 // Get K/D trend data for a player
-router.get('/trends/kd/:playerId', async (req, res) => {
+router.get('/trends/kd/:playerId', validate(trendQuerySchema), async (req, res) => {
   try {
     const { playerId } = req.params;
     const { days = 30 } = req.query;
@@ -62,7 +63,7 @@ router.get('/trends/kd/:playerId', async (req, res) => {
 });
 
 // Get win rate trend data for a player
-router.get('/trends/winrate/:playerId', async (req, res) => {
+router.get('/trends/winrate/:playerId', validate(trendQuerySchema), async (req, res) => {
   try {
     const { playerId } = req.params;
     const { days = 30 } = req.query;
@@ -92,7 +93,7 @@ router.get('/trends/winrate/:playerId', async (req, res) => {
 });
 
 // Compare multiple players
-router.post('/compare', async (req, res) => {
+router.post('/compare', validate(compareSchema), async (req, res) => {
   try {
     const { playerIds } = req.body;
 
@@ -133,7 +134,7 @@ router.post('/compare', async (req, res) => {
 });
 
 // Track a player (add to tracked players list)
-router.post('/track', authenticateToken, async (req, res) => {
+router.post('/track', authenticateToken, validate(trackSchema), async (req, res) => {
   try {
     const { playerId, playerName, platform = 'pc' } = req.body;
 
@@ -274,7 +275,7 @@ router.get('/trends/winrate/:playerId', async (req, res) => {
 });
 
 // Get AI Loadout Recommendations
-router.get('/ai/recommendations/:playerId', async (req, res) => {
+router.get('/ai/recommendations/:playerId', validate(playerIdParamSchema), async (req, res) => {
   try {
     const { playerId } = req.params;
     const recommendations = await generateRecommendations(playerId);
