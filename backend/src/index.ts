@@ -3,9 +3,10 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import { createServer } from 'http';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
+import morgan from 'morgan';
 import pool from './config/database';
 import statsRoutes from './routes/stats';
 import leaderboardRoutes from './routes/leaderboard';
@@ -14,6 +15,7 @@ import socialRoutes from './routes/social';
 import notificationRoutes from './routes/notifications';
 import gameRoutes from './routes/game';
 import { startCronJobs } from './services/cronJobs';
+import { errorHandler } from './middleware/errorHandler';
 
 dotenv.config();
 
@@ -28,8 +30,19 @@ const io = new Server(httpServer, {
 
 const PORT = process.env.PORT || 5000;
 
-// Security Middleware
-app.use(helmet()); // Sets various security-related HTTP headers
+// Logging & Security Middleware
+app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", "https:", "ws:", "wss:"],
+    },
+  },
+}));
 
 // Rate Limiting
 const generalLimiter = rateLimit({
@@ -73,17 +86,16 @@ app.get('/health', async (req, res) => {
   try {
     await pool.query('SELECT NOW()');
     res.json({ status: 'ok', database: 'connected' });
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (_error) {
     res.status(500).json({ status: 'error', database: 'disconnected' });
   }
 });
 
 // WebSocket Handlers
-io.on('connection', (socket) => {
+io.on('connection', (socket: Socket) => {
   console.log('📡 Tactical Uplink Established:', socket.id);
 
-  socket.on('join_user_room', (userId) => {
+  socket.on('join_user_room', (userId: string) => {
     socket.join(`user_${userId}`);
     console.log(`👤 User ${userId} synchronized to secure channel`);
   });
@@ -92,6 +104,9 @@ io.on('connection', (socket) => {
     console.log('📡 Tactical Uplink Terminated:', socket.id);
   });
 });
+
+// Error Handling (Must be last)
+app.use(errorHandler);
 
 // Export io for use in other routes
 export { io };
