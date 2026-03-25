@@ -8,30 +8,47 @@ export interface AIAsset {
 }
 
 const textures = [
-    {
-        title: "Digital Urban Camo",
-        description: "Advanced geometric pattern for urban combat environments.",
-        content: "/assets/ai/texture.png"
-    }
+  {
+    title: "Digital Urban Camo",
+    description: "Advanced geometric pattern for urban combat environments.",
+    content: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&q=80&w=1000"
+  },
+  {
+    title: "Neon Circuitry",
+    description: "Cybernetic glowing patterns for specialized intel gear.",
+    content: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000"
+  },
+  {
+    title: "Carbon Fiber Plate",
+    description: "High-durability weave for armored vehicle plating.",
+    content: "https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?auto=format&fit=crop&q=80&w=1000"
+  }
 ];
 
 const characters = [
-    {
-        title: "Specter (Recon)",
-        description: "Specialized in electronic warfare and long-range surveillance.",
-        content: "/assets/ai/recon.png"
-    },
-    {
-        title: "Bulwark (Assault)",
-        description: "Front-line heavy infantry with specialized ballistic protection.",
-        content: "/assets/ai/assault.png"
-    }
+  {
+    title: "Specter (Recon)",
+    description: "Specialized in electronic warfare and long-range surveillance.",
+    content: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=1000"
+  },
+  {
+    title: "Bulwark (Assault)",
+    description: "Front-line heavy infantry with specialized ballistic protection.",
+    content: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=1000"
+  },
+  {
+    title: "Ghost (Infiltrator)",
+    description: "Elite stealth operative trained in close-quarters assassination.",
+    content: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=1000"
+  }
 ];
 
 const stories = [
-    "Operation Dark Sky: Infiltrate the Kropotkin facility and retrieve the decrypted telemetry data before the grid collapses.",
-    "Siege of Neo-Tokyo: Defend the central data core from a coordinated insurgent strike targeting our global logistics network.",
-    "Ghost Signal: Investigate an anomalous frequency originating from the Siberian wastes. Potential deep-cell activation detected."
+  "Operation Dark Sky: Infiltrate the Kropotkin facility and retrieve the decrypted telemetry data before the grid collapses.",
+  "Siege of Neo-Tokyo: Defend the central data core from a coordinated insurgent strike targeting our global logistics network.",
+  "Ghost Signal: Investigate an anomalous frequency originating from the Siberian wastes. Potential deep-cell activation detected.",
+  "Project Chimera: Locate and extract the biological research team before the facility's self-destruct sequence initiates.",
+  "Sunset Protocol: Establish a secure uplink in the neutralized zone and broadcast the evidence of the Director's treason."
 ];
 
 export const aiService = {
