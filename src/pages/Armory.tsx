@@ -45,7 +45,7 @@ const Armory: React.FC = () => {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <span className="h-[1px] w-8 bg-blue-500" />
-              <span className="text-[10px] font-mono text-blue-400 tracking-[0.4em] uppercase">Tactical Arsenal</span>
+              <span className="text-xs font-mono text-blue-400 tracking-[0.4em] uppercase">Tactical Arsenal</span>
             </div>
             <h1 className="text-6xl font-black italic tracking-tighter mb-2 uppercase leading-none chromatic-aberration animate-glitch-v2">
               The <span className="bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent">Armory</span>
@@ -85,20 +85,20 @@ const Armory: React.FC = () => {
               <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-4 px-6 py-3 bg-black/60 border border-white/10 rounded-full backdrop-blur-xl">
                 <div className="flex flex-col items-center gap-1 group/control">
                   <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
-                  <span className="text-[7px] font-mono text-gray-500 uppercase">3D_LOCKED</span>
+                  <span className="text-[10px] font-mono text-gray-500 uppercase">3D_LOCKED</span>
                 </div>
                 <div className="w-[1px] h-4 bg-white/10" />
-                <span className="text-[9px] font-black italic text-white/60 tracking-widest uppercase">Rotate to Inspect</span>
+                <span className="text-xs font-black italic text-white/60 tracking-widest uppercase">Rotate to Inspect</span>
               </div>
 
               {/* Stats Overlay */}
               <div className="absolute top-8 left-8 space-y-4">
                 <div className="flex flex-col">
-                  <span className="text-[10px] font-mono text-blue-400 uppercase tracking-widest">Global Ranking</span>
+                  <span className="text-xs font-mono text-blue-400 uppercase tracking-widest">Global Ranking</span>
                   <span className="text-2xl font-black italic">#{selectedItem.id * 124}</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-[10px] font-mono text-blue-400 uppercase tracking-widest">Mastery Level</span>
+                  <span className="text-xs font-mono text-blue-400 uppercase tracking-widest">Mastery Level</span>
                   <div className="flex items-center gap-3">
                     <span className="text-xl font-black italic">LVL {selectedItem.level}</span>
                     <div className="w-24 h-1 bg-white/10 rounded-full overflow-hidden">
@@ -119,12 +119,12 @@ const Armory: React.FC = () => {
             <div className="glass-card p-8">
               <div className="flex justify-between items-start mb-6">
                 <div>
-                  <span className="text-[10px] font-mono text-blue-400 uppercase tracking-widest block mb-1">
+                  <span className="text-xs font-mono text-blue-400 uppercase tracking-widest block mb-1">
                     {activeTab === 'operators' ? 'Unit Profile' : 'Technical Specs'}
                   </span>
                   <h2 className="text-3xl font-black italic uppercase tracking-tight">{selectedItem.name}</h2>
                 </div>
-                <div className="px-3 py-1 bg-white/5 border border-white/10 rounded-lg font-mono text-[10px] text-gray-400">
+                <div className="px-3 py-1 bg-white/5 border border-white/10 rounded-lg font-mono text-xs text-gray-400">
                   {activeTab === 'operators' ? `SQUAD_ID_${selectedItem.id}` : `WPN_REF_${selectedItem.id}`}
                 </div>
               </div>
@@ -136,7 +136,7 @@ const Armory: React.FC = () => {
               {/* Skills for Operators */}
               {activeTab === 'operators' && 'skills' in selectedItem && (
                 <div className="space-y-4 mb-8">
-                  <span className="text-[10px] font-black italic uppercase text-gray-500 tracking-[0.2em] block">
+                  <span className="text-xs font-black italic uppercase text-gray-500 tracking-[0.2em] block">
                     Active Skills
                   </span>
                   <div className="grid grid-cols-2 gap-3">
@@ -145,7 +145,7 @@ const Armory: React.FC = () => {
                         <div className="w-8 h-8 rounded-lg bg-blue-600/20 flex items-center justify-center text-blue-400 mb-2 group-hover:bg-blue-600 group-hover:text-white transition-all">
                           {i === 0 ? '⚡' : '🛡️'}
                         </div>
-                        <span className="text-[10px] font-black italic uppercase block">{skill}</span>
+                        <span className="text-xs font-black italic uppercase block">{skill}</span>
                       </div>
                     ))}
                   </div>
@@ -156,7 +156,7 @@ const Armory: React.FC = () => {
               {activeTab === 'arsenal' && (
                 <div className="space-y-6 mb-8">
                   <div className="space-y-3">
-                    <span className="text-[10px] font-black italic uppercase text-gray-500 tracking-[0.2em] block">
+                    <span className="text-xs font-black italic uppercase text-gray-500 tracking-[0.2em] block">
                       Optics Slot
                     </span>
                     <div className="flex flex-wrap gap-2">
@@ -164,7 +164,7 @@ const Armory: React.FC = () => {
                         <button
                           key={opt}
                           onClick={() => updateAttachment('optic', opt)}
-                          className={`px-3 py-1.5 border rounded-lg text-[9px] font-black italic uppercase transition-all ${
+                          className={`px-3 py-1.5 border rounded-lg text-xs font-black italic uppercase transition-all ${
                             attachments.optic === opt 
                               ? 'bg-purple-600 border-purple-400 text-white' 
                               : 'bg-white/5 border-white/10 text-gray-400 hover:bg-white/10'
@@ -177,7 +177,7 @@ const Armory: React.FC = () => {
                   </div>
 
                   <div className="space-y-3">
-                    <span className="text-[10px] font-black italic uppercase text-gray-500 tracking-[0.2em] block">
+                    <span className="text-xs font-black italic uppercase text-gray-500 tracking-[0.2em] block">
                       Tactical Slot
                     </span>
                     <div className="flex flex-wrap gap-2">
@@ -185,7 +185,7 @@ const Armory: React.FC = () => {
                         <button
                           key={tac}
                           onClick={() => updateAttachment('muzzle', tac)}
-                          className={`px-3 py-1.5 border rounded-lg text-[9px] font-black italic uppercase transition-all ${
+                          className={`px-3 py-1.5 border rounded-lg text-xs font-black italic uppercase transition-all ${
                             attachments.muzzle === tac 
                               ? 'bg-blue-600 border-blue-400 text-white' 
                               : 'bg-white/5 border-white/10 text-gray-400 hover:bg-white/10'
@@ -200,7 +200,7 @@ const Armory: React.FC = () => {
               )}
 
               <div className="space-y-4 mb-8">
-                <span className="text-[10px] font-black italic uppercase text-gray-500 tracking-[0.2em] block">
+                <span className="text-xs font-black italic uppercase text-gray-500 tracking-[0.2em] block">
                   Material Finish
                 </span>
                 <div className="flex gap-3">
@@ -236,7 +236,7 @@ const Armory: React.FC = () => {
                       <h4 className="font-black italic text-sm uppercase tracking-wide">{item.name}</h4>
                       <span className="text-[8px] font-mono text-blue-400">LVL {item.level}</span>
                     </div>
-                    <span className="text-[10px] text-gray-600 font-mono uppercase tracking-widest">
+                    <span className="text-xs text-gray-600 font-mono uppercase tracking-widest">
                       {'role' in item ? item.role : item.type}
                     </span>
                   </div>
