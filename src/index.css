@@ -91,12 +91,12 @@
 }
 
   .chromatic-aberration {
-    text-shadow: 2px 0 #ff0000aa, -2px 0 #00ff00aa;
+    text-shadow: 1px 0 rgba(59, 130, 246, 0.5), -1px 0 rgba(139, 92, 246, 0.5);
     position: relative;
   }
 
   .dof-blur {
-    filter: blur(2px) saturate(0.8);
+    filter: blur(1.5px) saturate(0.9);
     transition: filter 0.5s ease;
   }
 
@@ -105,7 +105,7 @@
   }
 
   .tactical-glow {
-    box-shadow: 0 0 15px var(--glow-color, rgba(59, 130, 246, 0.4));
+    box-shadow: 0 0 10px var(--glow-color, rgba(59, 130, 246, 0.3));
   }
 
 .noise-overlay {
@@ -114,22 +114,20 @@
   z-index: 105;
   pointer-events: none;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  opacity: 0.05;
+  opacity: 0.03;
   mix-blend-mode: overlay;
 }
 
 @keyframes glitch-v2 {
   0% { clip-path: polygon(0 2%, 100% 2%, 100% 5%, 0 5%); transform: translate(0); }
-  2% { clip-path: polygon(0 78%, 100% 78%, 100% 100%, 0 100%); transform: translate(-5px); }
-  4% { clip-path: polygon(0 78%, 100% 78%, 100% 100%, 0 100%); transform: translate(5px); }
-  6% { clip-path: polygon(0 78%, 100% 78%, 100% 100%, 0 100%); transform: translate(0); }
-  8% { clip-path: polygon(0 54%, 100% 54%, 100% 44%, 0 44%); transform: translate3d(5px, 0, 0); }
-  9% { clip-path: polygon(0 54%, 100% 54%, 100% 44%, 0 44%); transform: translate3d(0, 0, 0); }
-  100% { clip-path: polygon(0 54%, 100% 54%, 100% 44%, 0 44%); transform: translate3d(0, 0, 0); }
+  2% { clip-path: polygon(0 78%, 100% 78%, 100% 100%, 0 100%); transform: translate(-2px); }
+  4% { clip-path: polygon(0 78%, 100% 78%, 100% 100%, 0 100%); transform: translate(2px); }
+  6% { clip-path: polygon(0 50%, 100% 50%, 100% 52%, 0 52%); transform: translate(0); }
+  100% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); transform: translate(0); }
 }
 
 .animate-glitch-v2:hover {
-  animation: glitch-v2 0.3s cubic-bezier(.25,.46,.45,.94) both infinite;
+  animation: glitch-v2 0.4s cubic-bezier(.25,.46,.45,.94) both;
 }
 
 .vector-pulse {
