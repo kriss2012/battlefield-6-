@@ -261,111 +261,63 @@ export default function HeadToHead() {
             </div>
 
             {/* Detailed Stats Table */}
-            <div className="bg-gray-800 rounded-lg overflow-hidden">
-              <table className="w-full">
-                <thead className="bg-gray-900">
+            <div className="glass-card overflow-hidden animate-fade-in" style={{ animationDelay: '0.4s' }}>
+              <table className="w-full border-collapse">
+                <thead className="bg-white/5 border-b border-white/10 text-left">
                   <tr>
-                    <th className="text-left p-4">Statistic</th>
-                    <th className="text-center p-4">{player1Data.player_name}</th>
-                    <th className="text-center p-4">{player2Data.player_name}</th>
-                    <th className="text-center p-4">Winner</th>
+                    <th className="p-6 text-xs font-black uppercase tracking-[0.2em] text-blue-500/60">Statistic_Designation</th>
+                    <th className="p-6 text-center text-xs font-black uppercase tracking-[0.2em] text-blue-400">{player1Data.player_name}</th>
+                    <th className="p-6 text-center text-xs font-black uppercase tracking-[0.2em] text-purple-400">{player2Data.player_name}</th>
+                    <th className="p-6 text-center text-xs font-black uppercase tracking-[0.2em] text-gray-500">Operation_Dominance</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-700">
-                  <tr>
-                    <td className="p-4 font-semibold">K/D Ratio</td>
-                    <td className={`text-center p-4 ${getWinner(player1Data.kd_ratio, player2Data.kd_ratio, 1) ? 'bg-green-900/30 font-bold' : ''}`}>
+                <tbody className="divide-y divide-white/5 font-mono">
+                  <tr className="hover:bg-white/[0.02] transition-colors">
+                    <td className="p-6 text-sm font-black uppercase tracking-widest text-gray-400">K/D Ratio</td>
+                    <td className={`p-6 text-center text-sm font-black italic ${getWinner(player1Data.kd_ratio, player2Data.kd_ratio, 1) ? 'text-emerald-400 bg-emerald-500/5' : ''}`}>
                       {player1Data.kd_ratio.toFixed(2)}
                     </td>
-                    <td className={`text-center p-4 ${getWinner(player1Data.kd_ratio, player2Data.kd_ratio, 2) ? 'bg-green-900/30 font-bold' : ''}`}>
+                    <td className={`p-6 text-center text-sm font-black italic ${getWinner(player1Data.kd_ratio, player2Data.kd_ratio, 2) ? 'text-emerald-400 bg-emerald-500/5' : ''}`}>
                       {player2Data.kd_ratio.toFixed(2)}
                     </td>
-                    <td className="text-center p-4">
-                      {player1Data.kd_ratio > player2Data.kd_ratio ? player1Data.player_name : player1Data.kd_ratio < player2Data.kd_ratio ? player2Data.player_name : 'Tie'}
+                    <td className="p-6 text-center text-xs font-black uppercase tracking-widest text-blue-500/40">
+                      {player1Data.kd_ratio > player2Data.kd_ratio ? player1Data.player_name : player1Data.kd_ratio < player2Data.kd_ratio ? player2Data.player_name : 'NEUTRAL'}
                     </td>
                   </tr>
-                  <tr>
-                    <td className="p-4 font-semibold">Win Rate</td>
-                    <td className={`text-center p-4 ${getWinner(player1Data.win_rate, player2Data.win_rate, 1) ? 'bg-green-900/30 font-bold' : ''}`}>
+                  <tr className="hover:bg-white/[0.02] transition-colors">
+                    <td className="p-6 text-sm font-black uppercase tracking-widest text-gray-400">Win Rate</td>
+                    <td className={`p-6 text-center text-sm font-black italic ${getWinner(player1Data.win_rate, player2Data.win_rate, 1) ? 'text-emerald-400 bg-emerald-500/5' : ''}`}>
                       {player1Data.win_rate.toFixed(1)}%
                     </td>
-                    <td className={`text-center p-4 ${getWinner(player1Data.win_rate, player2Data.win_rate, 2) ? 'bg-green-900/30 font-bold' : ''}`}>
+                    <td className={`p-6 text-center text-sm font-black italic ${getWinner(player1Data.win_rate, player2Data.win_rate, 2) ? 'text-emerald-400 bg-emerald-500/5' : ''}`}>
                       {player2Data.win_rate.toFixed(1)}%
                     </td>
-                    <td className="text-center p-4">
-                      {player1Data.win_rate > player2Data.win_rate ? player1Data.player_name : player1Data.win_rate < player2Data.win_rate ? player2Data.player_name : 'Tie'}
+                    <td className="p-6 text-center text-xs font-black uppercase tracking-widest text-blue-500/40">
+                      {player1Data.win_rate > player2Data.win_rate ? player1Data.player_name : player1Data.win_rate < player2Data.win_rate ? player2Data.player_name : 'NEUTRAL'}
                     </td>
                   </tr>
-                  <tr>
-                    <td className="p-4 font-semibold">Total Kills</td>
-                    <td className={`text-center p-4 ${getWinner(player1Data.kills, player2Data.kills, 1) ? 'bg-green-900/30 font-bold' : ''}`}>
+                  <tr className="hover:bg-white/[0.02] transition-colors">
+                    <td className="p-6 text-sm font-black uppercase tracking-widest text-gray-400">Total Kills</td>
+                    <td className={`p-6 text-center text-sm font-black italic ${getWinner(player1Data.kills, player2Data.kills, 1) ? 'text-emerald-400 bg-emerald-500/5' : ''}`}>
                       {player1Data.kills.toLocaleString()}
                     </td>
-                    <td className={`text-center p-4 ${getWinner(player1Data.kills, player2Data.kills, 2) ? 'bg-green-900/30 font-bold' : ''}`}>
+                    <td className={`p-6 text-center text-sm font-black italic ${getWinner(player1Data.kills, player2Data.kills, 2) ? 'text-emerald-400 bg-emerald-500/5' : ''}`}>
                       {player2Data.kills.toLocaleString()}
                     </td>
-                    <td className="text-center p-4">
-                      {player1Data.kills > player2Data.kills ? player1Data.player_name : player1Data.kills < player2Data.kills ? player2Data.player_name : 'Tie'}
+                    <td className="p-6 text-center text-xs font-black uppercase tracking-widest text-blue-500/40">
+                      {player1Data.kills > player2Data.kills ? player1Data.player_name : player1Data.kills < player2Data.kills ? player2Data.player_name : 'NEUTRAL'}
                     </td>
                   </tr>
-                  <tr>
-                    <td className="p-4 font-semibold">Total Wins</td>
-                    <td className={`text-center p-4 ${getWinner(player1Data.wins, player2Data.wins, 1) ? 'bg-green-900/30 font-bold' : ''}`}>
-                      {player1Data.wins.toLocaleString()}
-                    </td>
-                    <td className={`text-center p-4 ${getWinner(player1Data.wins, player2Data.wins, 2) ? 'bg-green-900/30 font-bold' : ''}`}>
-                      {player2Data.wins.toLocaleString()}
-                    </td>
-                    <td className="text-center p-4">
-                      {player1Data.wins > player2Data.wins ? player1Data.player_name : player1Data.wins < player2Data.wins ? player2Data.player_name : 'Tie'}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="p-4 font-semibold">Total Score</td>
-                    <td className={`text-center p-4 ${getWinner(player1Data.score, player2Data.score, 1) ? 'bg-green-900/30 font-bold' : ''}`}>
+                  <tr className="hover:bg-white/[0.02] transition-colors">
+                    <td className="p-6 text-sm font-black uppercase tracking-widest text-gray-400">Total Score</td>
+                    <td className={`p-6 text-center text-sm font-black italic ${getWinner(player1Data.score, player2Data.score, 1) ? 'text-emerald-400 bg-emerald-500/5' : ''}`}>
                       {player1Data.score.toLocaleString()}
                     </td>
-                    <td className={`text-center p-4 ${getWinner(player1Data.score, player2Data.score, 2) ? 'bg-green-900/30 font-bold' : ''}`}>
+                    <td className={`p-6 text-center text-sm font-black italic ${getWinner(player1Data.score, player2Data.score, 2) ? 'text-emerald-400 bg-emerald-500/5' : ''}`}>
                       {player2Data.score.toLocaleString()}
                     </td>
-                    <td className="text-center p-4">
-                      {player1Data.score > player2Data.score ? player1Data.player_name : player1Data.score < player2Data.score ? player2Data.player_name : 'Tie'}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="p-4 font-semibold">Headshot %</td>
-                    <td className={`text-center p-4 ${getWinner(player1Data.headshot_percentage, player2Data.headshot_percentage, 1) ? 'bg-green-900/30 font-bold' : ''}`}>
-                      {player1Data.headshot_percentage.toFixed(1)}%
-                    </td>
-                    <td className={`text-center p-4 ${getWinner(player1Data.headshot_percentage, player2Data.headshot_percentage, 2) ? 'bg-green-900/30 font-bold' : ''}`}>
-                      {player2Data.headshot_percentage.toFixed(1)}%
-                    </td>
-                    <td className="text-center p-4">
-                      {player1Data.headshot_percentage > player2Data.headshot_percentage ? player1Data.player_name : player1Data.headshot_percentage < player2Data.headshot_percentage ? player2Data.player_name : 'Tie'}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="p-4 font-semibold">Accuracy</td>
-                    <td className={`text-center p-4 ${getWinner(player1Data.accuracy, player2Data.accuracy, 1) ? 'bg-green-900/30 font-bold' : ''}`}>
-                      {player1Data.accuracy.toFixed(1)}%
-                    </td>
-                    <td className={`text-center p-4 ${getWinner(player1Data.accuracy, player2Data.accuracy, 2) ? 'bg-green-900/30 font-bold' : ''}`}>
-                      {player2Data.accuracy.toFixed(1)}%
-                    </td>
-                    <td className="text-center p-4">
-                      {player1Data.accuracy > player2Data.accuracy ? player1Data.player_name : player1Data.accuracy < player2Data.accuracy ? player2Data.player_name : 'Tie'}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="p-4 font-semibold">Level</td>
-                    <td className={`text-center p-4 ${getWinner(player1Data.level, player2Data.level, 1) ? 'bg-green-900/30 font-bold' : ''}`}>
-                      {player1Data.level}
-                    </td>
-                    <td className={`text-center p-4 ${getWinner(player1Data.level, player2Data.level, 2) ? 'bg-green-900/30 font-bold' : ''}`}>
-                      {player2Data.level}
-                    </td>
-                    <td className="text-center p-4">
-                      {player1Data.level > player2Data.level ? player1Data.player_name : player1Data.level < player2Data.level ? player2Data.player_name : 'Tie'}
+                    <td className="p-6 text-center text-xs font-black uppercase tracking-widest text-blue-500/40">
+                      {player1Data.score > player2Data.score ? player1Data.player_name : player1Data.score < player2Data.score ? player2Data.player_name : 'NEUTRAL'}
                     </td>
                   </tr>
                 </tbody>
