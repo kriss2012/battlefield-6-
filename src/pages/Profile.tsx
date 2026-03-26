@@ -13,7 +13,7 @@ export default function Profile() {
   const [playerName, setPlayerName] = useState(user?.playerName || '');
   const [playerId, setPlayerId] = useState(user?.playerId || '');
   const [bio, setBio] = useState(user?.bio || '');
-  const [avatarUrl, setAvatarUrl] = useState(user?.avatarUrl || '');
+  const [avatarUrl] = useState(user?.avatarUrl || '');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
