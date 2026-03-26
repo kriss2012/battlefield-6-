@@ -45,7 +45,7 @@ export default function Leaderboard() {
           <div>
             <div className="flex items-center gap-2 mb-2">
               <span className="h-[1px] w-8 bg-amber-500" />
-              <span className="text-[10px] font-mono text-amber-400 tracking-[0.4em] uppercase">Competitive Arena</span>
+              <span className="text-xs font-mono text-amber-400 tracking-[0.4em] uppercase">Competitive Arena</span>
             </div>
             <h1 className="text-5xl font-black italic tracking-tighter uppercase leading-none">
               Global <span className="bg-gradient-to-r from-amber-400 to-orange-600 bg-clip-text text-transparent">Rankings</span>
@@ -57,7 +57,7 @@ export default function Leaderboard() {
               <button
                 key={stat}
                 onClick={() => setSortBy(stat)}
-                className={`px-6 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
+                className={`px-6 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all ${
                   sortBy === stat ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/20' : 'text-gray-500 hover:text-white'
                 }`}
               >
@@ -70,7 +70,7 @@ export default function Leaderboard() {
         <div className="glass-card overflow-hidden border-white/5">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-white/5 border-b border-white/10 text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">
+              <tr className="bg-white/5 border-b border-white/10 text-xs font-black uppercase tracking-[0.2em] text-gray-500">
                 <th className="px-6 py-4">Rank</th>
                 <th className="px-6 py-4">Operator</th>
                 <th className="px-6 py-4 text-center">Level</th>
@@ -113,13 +113,13 @@ export default function Leaderboard() {
                         </div>
                         <div>
                           <div className="font-black italic uppercase tracking-wider text-sm">{entry.player_name}</div>
-                          <div className="text-[9px] text-gray-600 font-mono">ID: {entry.player_id}</div>
+                          <div className="text-xs text-gray-600 font-mono">ID: {entry.player_id}</div>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-6 text-center font-black italic text-sm text-gray-400">LVL {entry.level}</td>
                     <td className="px-6 py-6 text-center">
-                      <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-500 text-[10px] font-black tracking-widest border border-emerald-500/20">
+                      <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-500 text-xs font-black tracking-widest border border-emerald-500/20">
                         {entry.wins} W
                       </span>
                     </td>
@@ -127,7 +127,7 @@ export default function Leaderboard() {
                       <div className="font-black italic text-lg bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
                         {parseFloat(entry.kd_ratio).toFixed(2)}
                       </div>
-                      <div className="text-[8px] text-gray-600 uppercase tracking-widest font-mono">KILL_DEATH_RATIO</div>
+                      <div className="text-[10px] text-gray-600 uppercase tracking-widest font-mono">KILL_DEATH_RATIO</div>
                     </td>
                   </motion.tr>
                 ))
@@ -138,7 +138,7 @@ export default function Leaderboard() {
           {entries.length === 0 && !loading && (
             <div className="p-24 text-center">
               <div className="text-4xl mb-4 grayscale opacity-20">🏆</div>
-              <p className="text-[10px] font-mono uppercase tracking-[0.4em] text-gray-600">Leaderboard data currently offline</p>
+              <p className="text-xs font-mono uppercase tracking-[0.4em] text-gray-600">Leaderboard data currently offline</p>
             </div>
           )}
         </div>
