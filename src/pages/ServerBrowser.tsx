@@ -28,8 +28,6 @@ export default function ServerBrowser() {
         const serverData = (response.data as { servers?: Server[] }).servers || [];
         setServers(serverData);
       }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       setError('Failed to load servers. Please try again.');
       setServers([]);
@@ -64,100 +62,102 @@ export default function ServerBrowser() {
           </Link>
         </div>
 
-          <form onSubmit={handleSearch} className="glass-card p-2 mb-12 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-            <div className="flex flex-col md:flex-row gap-2">
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="AUTHENTICATE NODE BY NAME..."
-                className="flex-1 px-6 py-4 bg-transparent border-none outline-none focus:ring-0 text-white placeholder-gray-600 font-mono text-xs uppercase tracking-widest"
-              />
-              <button
-                type="submit"
-                disabled={loading}
-                className="px-10 py-4 bg-blue-600 hover:bg-blue-500 disabled:bg-gray-800 rounded-xl font-black italic transition-all shadow-lg shadow-blue-900/20 uppercase tracking-widest"
+        <form onSubmit={handleSearch} className="glass-card p-2 mb-12 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+          <div className="flex flex-col md:flex-row gap-2">
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="AUTHENTICATE NODE BY NAME..."
+              className="flex-1 px-6 py-4 bg-transparent border-none outline-none focus:ring-0 text-white placeholder-gray-600 font-mono text-xs uppercase tracking-widest"
+            />
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-10 py-4 bg-blue-600 hover:bg-blue-500 disabled:bg-gray-800 rounded-xl font-black italic transition-all shadow-lg shadow-blue-900/20 uppercase tracking-widest"
+            >
+              {loading ? 'UPLINKING...' : 'SCAN NETWORK'}
+            </button>
+          </div>
+        </form>
+
+        {error && (
+          <div className="bg-red-900/10 border border-red-500/20 rounded-2xl p-6 mb-12 animate-fade-in">
+            <p className="text-red-400 text-xs font-black uppercase tracking-widest">ERROR_LOG: {error}</p>
+          </div>
+        )}
+
+        {loading ? (
+          <div className="glass-card p-24 text-center border-dashed border-2 border-white/5 opacity-50">
+            <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-blue-500 border-r-transparent mb-6"></div>
+            <p className="text-xs font-mono uppercase tracking-[0.4em] text-gray-500">Establishing multi-node synchronization...</p>
+          </div>
+        ) : servers.length === 0 ? (
+          <div className="glass-card p-24 text-center border-dashed border-2 border-white/5 opacity-50">
+            <div className="text-4xl mb-6 grayscale opacity-20">📡</div>
+            <p className="text-xs font-mono uppercase tracking-[0.4em] text-gray-600">
+              {searchTerm ? 'ZERO_TARGETS_ACQUIRED' : 'NETWORK_OFFLINE'}
+            </p>
+          </div>
+        ) : (
+          <div className="grid gap-4 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+            {servers.map((server, i) => (
+              <motion.div
+                key={server.serverId || server.id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.05 }}
+                whileHover={{ x: 10, backgroundColor: 'rgba(255,255,255,0.05)' }}
+                className="glass-card p-8 group relative overflow-hidden transition-all border border-white/5 hover:border-blue-500/30"
               >
-                {loading ? 'UPLINKING...' : 'SCAN NETWORK'}
-              </button>
-            </div>
-          </form>
-
-          {error && (
-            <div className="bg-red-900/50 border border-red-700 rounded-lg p-4 mb-6">
-              <p className="text-red-200">Error: {error}</p>
-            </div>
-          )}
-
-          {loading ? (
-            <div className="glass-card p-24 text-center border-dashed border-2 border-white/5 opacity-50">
-              <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-blue-500 border-r-transparent mb-6"></div>
-              <p className="text-xs font-mono uppercase tracking-[0.4em] text-gray-500">Establishing multi-node synchronization...</p>
-            </div>
-          ) : servers.length === 0 ? (
-            <div className="glass-card p-24 text-center border-dashed border-2 border-white/5 opacity-50">
-              <div className="text-4xl mb-6 grayscale opacity-20">📡</div>
-              <p className="text-xs font-mono uppercase tracking-[0.4em] text-gray-600">
-                {searchTerm ? 'ZERO_TARGETS_ACQUIRED' : 'NETWORK_OFFLINE'}
-              </p>
-            </div>
-          ) : (
-            <div className="grid gap-4 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-              {servers.map((server: Server) => (
-                <motion.div
-                  key={server.serverId || server.id}
-                  whileHover={{ x: 10, backgroundColor: 'rgba(255,255,255,0.05)' }}
-                  className="glass-card p-8 group relative overflow-hidden transition-all border border-white/5 hover:border-blue-500/30"
-                >
-                  <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                        <h3 className="text-2xl font-black italic uppercase tracking-tighter text-white group-hover:text-blue-400 transition-colors">
-                          {server.prefix}
-                        </h3>
-                      </div>
-                      <div className="flex flex-wrap gap-3">
-                        <span className="px-3 py-1 bg-white/5 rounded-lg text-[10px] font-black uppercase tracking-widest text-gray-400 border border-white/5">
-                          {server.mode}
-                        </span>
-                        <span className="px-3 py-1 bg-blue-600/10 rounded-lg text-[10px] font-black uppercase tracking-widest text-blue-400 border border-blue-500/20">
-                          {server.region}
-                        </span>
-                        <span className="px-3 py-1 bg-white/5 rounded-lg text-[10px] font-black uppercase tracking-widest text-gray-400 border border-white/5 flex items-center gap-2">
-                          🗺️ {server.currentMap}
-                        </span>
-                      </div>
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                      <h3 className="text-2xl font-black italic uppercase tracking-tighter text-white group-hover:text-blue-400 transition-colors">
+                        {server.prefix}
+                      </h3>
                     </div>
-                    
-                    <div className="flex items-center gap-12">
-                      <div className="text-right">
-                        <div className="text-3xl font-black italic text-white leading-none mb-1">
-                          {server.playerAmount}<span className="text-blue-500/40">/</span>{server.maxPlayers}
-                        </div>
-                        <div className="text-[10px] font-black uppercase tracking-widest text-gray-600">Combatants</div>
-                      </div>
-                      
-                      <button className="px-6 py-3 bg-white/5 hover:bg-white/10 rounded-xl font-black italic text-xs uppercase tracking-[0.2em] transition-all border border-white/10 group-hover:border-blue-500/50 group-hover:text-blue-400">
-                        CONNECT
-                      </button>
+                    <div className="flex flex-wrap gap-3">
+                      <span className="px-3 py-1 bg-white/5 rounded-lg text-[10px] font-black uppercase tracking-widest text-gray-400 border border-white/5">
+                        {server.mode}
+                      </span>
+                      <span className="px-3 py-1 bg-blue-600/10 rounded-lg text-[10px] font-black uppercase tracking-widest text-blue-400 border border-blue-500/20">
+                        {server.region}
+                      </span>
+                      <span className="px-3 py-1 bg-white/5 rounded-lg text-[10px] font-black uppercase tracking-widest text-gray-400 border border-white/5 flex items-center gap-2">
+                        🗺️ {server.currentMap}
+                      </span>
                     </div>
                   </div>
                   
-                  {server.progress !== null && (
-                    <div className="absolute bottom-0 left-0 w-full h-1 bg-white/5">
-                      <motion.div 
-                        initial={{ width: 0 }}
-                        animate={{ width: `${server.progress}%` }}
-                        className="h-full bg-blue-500/40"
-                      />
+                  <div className="flex items-center gap-12">
+                    <div className="text-right">
+                      <div className="text-3xl font-black italic text-white leading-none mb-1">
+                        {server.playerAmount}<span className="text-blue-500/40">/</span>{server.maxPlayers}
+                      </div>
+                      <div className="text-[10px] font-black uppercase tracking-widest text-gray-600">Combatants</div>
                     </div>
-                  )}
-                </motion.div>
-              ))}
-            </div>
-          )}
-        </div>
+                    
+                    <button className="px-6 py-3 bg-white/5 hover:bg-white/10 rounded-xl font-black italic text-xs uppercase tracking-[0.2em] transition-all border border-white/10 group-hover:border-blue-500/50 group-hover:text-blue-400">
+                      CONNECT
+                    </button>
+                  </div>
+                </div>
+                
+                {server.progress !== null && (
+                  <div className="absolute bottom-0 left-0 w-full h-1 bg-white/5">
+                    <motion.div 
+                      initial={{ width: 0 }}
+                      animate={{ width: `${server.progress}%` }}
+                      className="h-full bg-blue-500/40"
+                    />
+                  </div>
+                )}
+              </motion.div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
