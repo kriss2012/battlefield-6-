@@ -163,172 +163,164 @@ export default function Profile() {
           </motion.div>
         )}
 
-        {/* Profile Information */}
-        <div className="bg-gray-800 rounded-lg p-6 mb-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-semibold">Profile Information</h2>
-            <button
-              onClick={() => setEditing(!editing)}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
-            >
-              {editing ? 'Cancel' : 'Edit Profile'}
-            </button>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+          {/* Profile Information */}
+          <div className="glass-card p-8 relative overflow-hidden group">
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-3">
+                <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                <h2 className="text-xs font-black uppercase tracking-[0.4em] text-blue-500/60">Profile Identification</h2>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <div className="group/field">
+                <label className="block text-[10px] font-black text-gray-600 mb-2 uppercase tracking-widest group-hover/field:text-blue-500/60 transition-colors">Access_Username</label>
+                <div className="px-6 py-4 bg-white/5 border border-white/5 rounded-2xl text-sm font-bold text-gray-400">{user.username}</div>
+              </div>
+
+              <div className="group/field">
+                <label className="block text-[10px] font-black text-gray-600 mb-2 uppercase tracking-widest group-hover/field:text-blue-500/60 transition-colors">Neural_Email_Link</label>
+                <div className="px-6 py-4 bg-white/5 border border-white/5 rounded-2xl text-sm font-bold text-gray-400">{user.email}</div>
+              </div>
+
+              <div className="group/field">
+                <label className="block text-[10px] font-black text-gray-600 mb-2 uppercase tracking-widest group-hover/field:text-blue-500/60 transition-colors">Tactical_Callsign</label>
+                {editing ? (
+                  <input
+                    type="text"
+                    value={playerName}
+                    onChange={(e) => setPlayerName(e.target.value)}
+                    className="w-full px-6 py-4 bg-white/10 border border-blue-500/30 rounded-2xl focus:outline-none focus:border-blue-500 text-sm font-black italic uppercase text-white transition-all"
+                    placeholder="Enter callsign..."
+                  />
+                ) : (
+                  <div className="px-6 py-4 bg-white/5 border border-white/5 rounded-2xl text-sm font-black italic uppercase text-white">{user.playerName || 'UNASSIGNED'}</div>
+                )}
+              </div>
+
+              <div className="group/field">
+                <label className="block text-[10px] font-black text-gray-600 mb-2 uppercase tracking-widest group-hover/field:text-blue-500/60 transition-colors">Operator_Serial_ID</label>
+                {editing ? (
+                  <input
+                    type="text"
+                    value={playerId}
+                    onChange={(e) => setPlayerId(e.target.value)}
+                    className="w-full px-6 py-4 bg-white/10 border border-blue-500/30 rounded-2xl focus:outline-none focus:border-blue-500 text-sm font-black italic uppercase text-white transition-all"
+                    placeholder="Enter serial ID..."
+                  />
+                ) : (
+                  <div className="px-6 py-4 bg-white/5 border border-white/5 rounded-2xl text-sm font-black italic uppercase text-white">{user.playerId || 'NOT_SET'}</div>
+                )}
+              </div>
+
+              {editing && (
+                <button
+                  onClick={handleUpdateProfile}
+                  disabled={loading}
+                  className="w-full px-8 py-4 bg-blue-600 hover:bg-blue-500 disabled:bg-gray-800 rounded-2xl transition-all font-black italic uppercase tracking-widest shadow-lg shadow-blue-900/20"
+                >
+                  {loading ? 'SYNCHRONIZING...' : 'UPDATE CORE DATA'}
+                </button>
+              )}
+            </div>
           </div>
 
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm text-gray-400 mb-1">Username</label>
-              <div className="px-4 py-2 bg-gray-700 rounded-lg">{user.username}</div>
-            </div>
-
-            <div>
-              <label className="block text-sm text-gray-400 mb-1">Email</label>
-              <div className="px-4 py-2 bg-gray-700 rounded-lg">{user.email}</div>
-            </div>
-
-            <div>
-              <label className="block text-sm text-gray-400 mb-1">Player Name</label>
-              {editing ? (
-                <input
-                  type="text"
-                  value={playerName}
-                  onChange={(e) => setPlayerName(e.target.value)}
-                  className="w-full px-4 py-2 bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Your in-game name"
-                />
-              ) : (
-                <div className="px-4 py-2 bg-gray-700 rounded-lg">{user.playerName || 'Not set'}</div>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm text-gray-400 mb-1">Player ID</label>
-              {editing ? (
-                <input
-                  type="text"
-                  value={playerId}
-                  onChange={(e) => setPlayerId(e.target.value)}
-                  className="w-full px-4 py-2 bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Your BF6 player ID"
-                />
-              ) : (
-                <div className="px-4 py-2 bg-gray-700 rounded-lg">{user.playerId || 'Not set'}</div>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm text-gray-400 mb-1">Bio</label>
-              {editing ? (
+          <div className="space-y-8">
+            {/* Bio Section in Edit Mode */}
+            {editing && (
+              <div className="glass-card p-8 border-l-4 border-emerald-500 animate-fade-in">
+                <label className="block text-xs font-black text-emerald-500/60 mb-4 uppercase tracking-[0.4em]">Update Directives</label>
                 <textarea
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
-                  rows={3}
-                  className="w-full px-4 py-2 bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Tell us about yourself..."
+                  rows={4}
+                  className="w-full px-6 py-4 bg-white/10 border border-emerald-500/30 rounded-2xl focus:outline-none focus:border-emerald-500 text-sm font-medium italic text-gray-200 transition-all resize-none"
+                  placeholder="Enter mission directives..."
                 />
-              ) : (
-                <div className="px-4 py-2 bg-gray-700 rounded-lg min-h-[80px]">{user.bio || 'No bio yet'}</div>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm text-gray-400 mb-1">Avatar URL</label>
-              {editing ? (
-                <input
-                  type="url"
-                  value={avatarUrl}
-                  onChange={(e) => setAvatarUrl(e.target.value)}
-                  className="w-full px-4 py-2 bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="https://example.com/avatar.jpg"
-                />
-              ) : (
-                <div className="px-4 py-2 bg-gray-700 rounded-lg">{user.avatarUrl || 'Not set'}</div>
-              )}
-            </div>
-
-            {editing && (
-              <button
-                onClick={handleUpdateProfile}
-                disabled={loading}
-                className="w-full px-6 py-3 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 rounded-lg transition-colors font-semibold"
-              >
-                {loading ? 'Saving...' : 'Save Changes'}
-              </button>
+              </div>
             )}
-          </div>
-        </div>
 
-        {/* Change Password */}
-        <div className="bg-gray-800 rounded-lg p-6 mb-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-semibold">Security</h2>
-            <button
-              onClick={() => setChangingPassword(!changingPassword)}
-              className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
-            >
-              {changingPassword ? 'Cancel' : 'Change Password'}
-            </button>
-          </div>
-
-          {changingPassword && (
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm text-gray-400 mb-1">Current Password</label>
-                <input
-                  type="password"
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  className="w-full px-4 py-2 bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter current password"
-                />
+            {/* Change Password Card */}
+            <div className="glass-card p-8 relative overflow-hidden group">
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                  <h2 className="text-xs font-black uppercase tracking-[0.4em] text-amber-500/60">Encryption Protocols</h2>
+                </div>
+                <button
+                  onClick={() => setChangingPassword(!changingPassword)}
+                  className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl font-black italic text-[10px] uppercase tracking-widest transition-all"
+                >
+                  {changingPassword ? 'ABORT' : 'MODIFY KEY'}
+                </button>
               </div>
 
-              <div>
-                <label className="block text-sm text-gray-400 mb-1">New Password</label>
-                <input
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  className="w-full px-4 py-2 bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="At least 6 characters"
-                />
-              </div>
+              {changingPassword && (
+                <div className="space-y-6 animate-fade-in">
+                  <div className="group/field">
+                    <label className="block text-[10px] font-black text-gray-600 mb-2 uppercase tracking-widest">Active_Pass_Key</label>
+                    <input
+                      type="password"
+                      value={currentPassword}
+                      onChange={(e) => setCurrentPassword(e.target.value)}
+                      className="w-full px-6 py-4 bg-white/10 border border-amber-500/30 rounded-2xl focus:outline-none focus:border-amber-500 text-sm font-mono text-white transition-all"
+                    />
+                  </div>
 
-              <div>
-                <label className="block text-sm text-gray-400 mb-1">Confirm New Password</label>
-                <input
-                  type="password"
-                  value={confirmNewPassword}
-                  onChange={(e) => setConfirmNewPassword(e.target.value)}
-                  className="w-full px-4 py-2 bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Re-enter new password"
-                />
-              </div>
+                  <div className="group/field">
+                    <label className="block text-[10px] font-black text-gray-600 mb-2 uppercase tracking-widest">New_Pass_Key</label>
+                    <input
+                      type="password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      className="w-full px-6 py-4 bg-white/10 border border-amber-500/30 rounded-2xl focus:outline-none focus:border-amber-500 text-sm font-mono text-white transition-all"
+                    />
+                  </div>
 
-              <button
-                onClick={handleChangePassword}
-                disabled={loading}
-                className="w-full px-6 py-3 bg-orange-600 hover:bg-orange-700 disabled:bg-gray-600 rounded-lg transition-colors font-semibold"
-              >
-                {loading ? 'Changing...' : 'Change Password'}
-              </button>
+                  <div className="group/field">
+                    <label className="block text-[10px] font-black text-gray-600 mb-2 uppercase tracking-widest">Confirm_Key</label>
+                    <input
+                      type="password"
+                      value={confirmNewPassword}
+                      onChange={(e) => setConfirmNewPassword(e.target.value)}
+                      className="w-full px-6 py-4 bg-white/10 border border-amber-500/30 rounded-2xl focus:outline-none focus:border-amber-500 text-sm font-mono text-white transition-all"
+                    />
+                  </div>
+
+                  <button
+                    onClick={handleChangePassword}
+                    disabled={loading}
+                    className="w-full px-8 py-4 bg-amber-600 hover:bg-amber-500 disabled:bg-gray-800 rounded-2xl transition-all font-black italic uppercase tracking-widest shadow-lg shadow-amber-900/20"
+                  >
+                    {loading ? 'RE-ENCRYPTING...' : 'UPDATE PROTOCOLS'}
+                  </button>
+                </div>
+              )}
+
+              {!changingPassword && (
+                <div className="flex flex-col items-center justify-center h-48 opacity-20 group-hover:opacity-40 transition-opacity">
+                  <span className="text-6xl mb-4">🔐</span>
+                  <p className="text-[10px] font-mono uppercase tracking-[0.4em]">Encrypted Storage Active</p>
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
 
-        {/* Logout */}
-        <div className="flex gap-4">
+        {/* Footer Actions */}
+        <div className="flex flex-col md:flex-row gap-6 mt-12 border-t border-white/5 pt-12">
           <button
             onClick={handleLogout}
-            className="px-6 py-3 bg-red-600 hover:bg-red-700 rounded-lg transition-colors font-semibold"
+            className="px-10 py-4 bg-red-600/10 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/20 rounded-2xl transition-all font-black italic uppercase tracking-widest shadow-lg shadow-red-900/10"
           >
-            Logout
+            TERMINATE SESSION
           </button>
           <button
             onClick={() => navigate('/')}
-            className="px-6 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors font-semibold"
+            className="px-10 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl transition-all font-black italic uppercase tracking-widest text-gray-400 hover:text-white"
           >
-            Back to Home
+            BACK TO HUB
           </button>
         </div>
       </div>
