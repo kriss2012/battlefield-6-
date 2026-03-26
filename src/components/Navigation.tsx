@@ -35,7 +35,7 @@ export default function Navigation() {
       className="fixed top-8 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-2"
     >
       {/* Sector Identity */}
-      <div className="hidden lg:flex flex-col items-end mr-6 font-mono text-[8px] text-gray-500 tracking-[0.3em]">
+      <div className="hidden lg:flex flex-col items-end mr-6 font-mono text-[10px] text-gray-500 tracking-[0.3em]">
         <span>SECTOR // 06</span>
         <span className="text-blue-500/50">ACTIVE_LINK_STABLE</span>
       </div>
@@ -46,7 +46,7 @@ export default function Navigation() {
         
         <Link to="/" className="px-4 py-2 hover:bg-white/5 rounded-xl transition-all group/logo">
           <div className="font-black italic text-sm tracking-tighter text-white group-hover/logo:text-blue-400">
-            BF6 <span className="text-[10px] not-italic opacity-50 ml-1">v2.0</span>
+            BF6 <span className="text-xs not-italic opacity-50 ml-1">v2.0</span>
           </div>
         </Link>
         
@@ -58,7 +58,7 @@ export default function Navigation() {
               key={link.to}
               to={link.to} 
               className={({ isActive }: { isActive: boolean }) => `
-                px-5 py-2 rounded-xl text-[10px] font-black tracking-[0.2em] transition-all duration-300 relative
+                px-5 py-2 rounded-xl text-xs font-black tracking-[0.2em] transition-all duration-300 relative
                 ${isActive ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30' : 'text-gray-400 hover:text-white hover:bg-white/5'}
               `}
             >
@@ -81,7 +81,7 @@ export default function Navigation() {
             <div className="flex items-center gap-1">
               <Link
                 to="/profile"
-                className="px-4 py-2 text-[10px] font-black text-white hover:bg-white/5 rounded-xl transition-all tracking-widest"
+                className="px-4 py-2 text-xs font-black text-white hover:bg-white/5 rounded-xl transition-all tracking-widest"
               >
                 {user?.username?.toUpperCase()}
               </Link>
@@ -97,13 +97,13 @@ export default function Navigation() {
             <div className="flex items-center gap-1">
               <Link
                 to="/login"
-                className="px-4 py-2 text-[10px] font-black text-gray-400 hover:text-white transition-all tracking-widest"
+                className="px-4 py-2 text-xs font-black text-gray-400 hover:text-white transition-all tracking-widest"
               >
                 AUTH
               </Link>
               <Link
                 to="/register"
-                className="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-[10px] font-black text-white rounded-xl transition-all shadow-lg shadow-blue-600/20 tracking-widest"
+                className="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-xs font-black text-white rounded-xl transition-all shadow-lg shadow-blue-600/20 tracking-widest"
               >
                 DEPLOY
               </Link>
@@ -113,7 +113,7 @@ export default function Navigation() {
       </div>
 
       {/* Telemetry Indicator */}
-      <div className="hidden lg:flex flex-col ml-6 font-mono text-[8px] text-gray-500 tracking-[0.3em]">
+      <div className="hidden lg:flex flex-col ml-6 font-mono text-[10px] text-gray-500 tracking-[0.3em]">
         <div className="flex items-center gap-2">
           <div className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
           <span>SYNC_READY</span>
