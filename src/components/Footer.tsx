@@ -9,7 +9,7 @@ const Footer = () => {
         <motion.div 
           animate={{ x: [0, -1000] }}
           transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-          className="inline-flex gap-12 font-mono text-[9px] text-blue-400/60 uppercase tracking-[0.2em]"
+          className="inline-flex gap-12 font-mono text-[11px] text-blue-400/60 uppercase tracking-[0.2em]"
         >
           <span>[SYSTEM] NEURAL FORGE V3.2 ONLINE</span>
           <span>[NET] GLOBAL NODES: 2,842 ACTIVE</span>
@@ -33,7 +33,7 @@ const Footer = () => {
             </div>
             <div className="flex flex-col">
               <span className="text-xl font-black italic tracking-tight uppercase">Stats Hub</span>
-              <span className="text-[10px] text-gray-600 font-bold uppercase tracking-[0.4em]">Operational Tactical Command</span>
+              <span className="text-xs text-gray-600 font-bold uppercase tracking-[0.4em]">Operational Tactical Command</span>
             </div>
           </div>
           <p className="text-sm text-gray-500 max-w-md leading-relaxed">
@@ -43,7 +43,7 @@ const Footer = () => {
         </div>
 
         <div className="flex flex-col gap-6">
-          <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-blue-500/60 flex items-center gap-2">
+          <h4 className="text-xs font-black uppercase tracking-[0.4em] text-blue-500/60 flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
             Operational_Links
           </h4>
@@ -65,12 +65,12 @@ const Footer = () => {
 
         <div className="flex flex-col items-end gap-6 text-right">
           <div className="glass-card px-8 py-4 border-blue-500/20 bg-blue-500/5 group">
-            <span className="text-[9px] font-black uppercase tracking-[0.5em] text-gray-600 block mb-2 group-hover:text-blue-400 transition-colors">Digital_Signature</span>
+            <span className="text-[11px] font-black uppercase tracking-[0.5em] text-gray-600 block mb-2 group-hover:text-blue-400 transition-colors">Digital_Signature</span>
             <span className="text-xl font-black italic tracking-tight bg-gradient-to-r from-blue-400 via-white to-cyan-400 bg-clip-text text-transparent uppercase chromatic-aberration">
               KRISHNA_DEV_7
             </span>
           </div>
-          <div className="text-[9px] text-gray-700 font-bold tracking-[0.3em] uppercase space-y-1">
+          <div className="text-[11px] text-gray-700 font-bold tracking-[0.3em] uppercase space-y-1">
             <p>© 2024 BF6 HUB // ALL RIGHTS RESERVED</p>
             <p className="text-red-900/40">UNAUTHORIZED_ACCESS_IS_FELONY</p>
           </div>
