@@ -98,40 +98,44 @@ export default function HeadToHead() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-6">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8">Head-to-Head Comparison</h1>
+    <div className="min-h-screen bg-neutral-950 text-white premium-gradient p-6">
+      <div className="max-w-7xl mx-auto relative">
+        <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-600/10 blur-[120px] rounded-full -z-10" />
+        
+        <h1 className="text-5xl font-black italic uppercase tracking-tighter mb-8 animate-fade-in">
+          Head-to-Head <span className="text-blue-500">Comparison</span>
+        </h1>
 
         {/* Player Input */}
-        <div className="bg-gray-800 rounded-lg p-6 mb-6">
-          <div className="grid md:grid-cols-2 gap-4 mb-4">
+        <div className="glass-card p-8 mb-8 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+          <div className="grid md:grid-cols-2 gap-6 mb-6">
             <div>
-              <label className="block text-sm text-gray-400 mb-2">Player 1 ID</label>
+              <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Target 01 Designation</label>
               <input
                 type="text"
                 value={player1Id}
                 onChange={(e) => setPlayer1Id(e.target.value)}
                 placeholder="Enter Player 1 ID"
-                className="w-full px-4 py-2 bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500/50 transition-all placeholder-gray-600"
               />
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-2">Player 2 ID</label>
+              <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Target 02 Designation</label>
               <input
                 type="text"
                 value={player2Id}
                 onChange={(e) => setPlayer2Id(e.target.value)}
                 placeholder="Enter Player 2 ID"
-                className="w-full px-4 py-2 bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500/50 transition-all placeholder-gray-600"
               />
             </div>
           </div>
           <button
             onClick={handleCompare}
             disabled={loading}
-            className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 rounded-lg transition-colors font-semibold"
+            className="w-full px-10 py-4 bg-blue-600 hover:bg-blue-500 disabled:bg-gray-800 rounded-xl font-black italic transition-all shadow-lg shadow-blue-900/20 uppercase tracking-widest"
           >
-            {loading ? 'Comparing...' : 'Compare Players'}
+            {loading ? 'ANALYZING TELEMETRY...' : 'INITIATE COMPARISON'}
           </button>
         </div>
 
