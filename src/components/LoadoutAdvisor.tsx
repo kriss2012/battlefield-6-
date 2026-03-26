@@ -67,14 +67,14 @@ export default function LoadoutAdvisor({ playerId }: { playerId: string }) {
 
         <div className="grid md:grid-cols-2 gap-8 mb-8">
           <div>
-            <span className="text-[10px] font-mono text-gray-500 uppercase block mb-2">Primary Recommendation</span>
+            <span className="text-xs font-mono text-gray-500 uppercase block mb-2">Primary Recommendation</span>
             <h3 className="text-3xl font-black italic uppercase tracking-tighter mb-4 bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
               {recommendation.primaryRecommendation.weapon}
             </h3>
             
             <div className="space-y-2 mb-6">
               {recommendation.primaryRecommendation.attachments.map((attach, i) => (
-                <div key={i} className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-gray-300">
+                <div key={i} className="flex items-center gap-3 text-xs font-black uppercase tracking-widest text-gray-300">
                   <span className="w-1 h-1 bg-blue-500 rounded-full" />
                   {attach}
                 </div>
@@ -88,17 +88,17 @@ export default function LoadoutAdvisor({ playerId }: { playerId: string }) {
 
           <div className="flex flex-col justify-between">
             <div className="bg-white/5 rounded-2xl p-6 border border-white/5">
-              <span className="text-[9px] font-black uppercase tracking-widest text-gray-500 block mb-4">Neural Performance Index</span>
+              <span className="text-xs font-black uppercase tracking-widest text-gray-500 block mb-4">Neural Performance Index</span>
               <div className="flex items-end gap-2">
                 <span className="text-5xl font-black italic text-blue-400 leading-none">
                   {recommendation.primaryRecommendation.performanceIndex}
                 </span>
-                <span className="text-[10px] font-black text-gray-600 mb-1">/ 100</span>
+                <span className="text-xs font-black text-gray-600 mb-1">/ 100</span>
               </div>
             </div>
 
             <div className="mt-6">
-              <span className="text-[10px] font-mono text-gray-500 uppercase block mb-2">Tactical Advice</span>
+              <span className="text-xs font-mono text-gray-500 uppercase block mb-2">Tactical Advice</span>
               <p className="text-xs text-gray-300 font-medium italic">
                 {recommendation.tacticalAdvice}
               </p>
@@ -109,10 +109,10 @@ export default function LoadoutAdvisor({ playerId }: { playerId: string }) {
         <div className="pt-6 border-t border-white/5">
           <div className="flex justify-between items-center bg-blue-600/5 p-4 rounded-xl border border-blue-500/10">
             <div>
-              <span className="text-[8px] font-black text-blue-400 uppercase tracking-widest block mb-1">Secondary Deployment Configuration</span>
+              <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest block mb-1">Secondary Deployment Configuration</span>
               <span className="text-sm font-black italic uppercase text-white">{recommendation.secondaryOption.weapon}</span>
             </div>
-            <button className="px-4 py-1.5 bg-blue-600 text-[9px] font-black uppercase tracking-widest rounded-lg hover:bg-blue-500 transition-colors shadow-lg shadow-blue-600/20">
+            <button className="px-4 py-1.5 bg-blue-600 text-xs font-black uppercase tracking-widest rounded-lg hover:bg-blue-500 transition-colors shadow-lg shadow-blue-600/20">
               SWITCH CONFIG
             </button>
           </div>
