@@ -70,14 +70,14 @@ const TacticalMap: React.FC = () => {
             <div className="flex flex-col gap-2">
               <div className="flex items-center gap-2">
                 <span className="w-1 h-1 bg-blue-500 rounded-full" />
-                <span className="text-[12px] font-black italic text-white uppercase tracking-tighter">{zone.name}</span>
+                <span className="text-sm font-black italic text-white uppercase tracking-tighter">{zone.name}</span>
               </div>
               <div className="h-[1px] bg-white/10 w-full" />
               <div className="flex justify-between items-center gap-12">
-                <span className={`text-[10px] font-mono font-bold ${
+                <span className={`text-xs font-mono font-bold ${
                    zone.status === 'ENGAGED' ? 'text-red-400' : 'text-gray-400'
                 }`}>{zone.status}</span>
-                <span className="text-[10px] font-mono text-blue-400 tabular-nums">{zone.load}% LOAD</span>
+                <span className="text-xs font-mono text-blue-400 tabular-nums">{zone.load}% LOAD</span>
               </div>
               <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
                 <motion.div 
@@ -92,13 +92,13 @@ const TacticalMap: React.FC = () => {
       ))}
 
       {/* Metadata Readouts */}
-      <div className="absolute top-8 left-10 flex flex-col gap-1 font-mono text-[9px] text-blue-400/40 uppercase tracking-widest">
+      <div className="absolute top-8 left-10 flex flex-col gap-1 font-mono text-[11px] text-blue-400/40 uppercase tracking-widest">
         <span>STRAT_NET_ESTABLISHED</span>
         <span>LATENCY_SYNC_ACTIVE [12MS]</span>
       </div>
 
       <div className="absolute bottom-8 right-10 text-right">
-         <span className="text-[10px] font-black italic text-blue-500/60 uppercase tracking-[0.4em]">Subsurface Scan Mode</span>
+         <span className="text-xs font-black italic text-blue-500/60 uppercase tracking-[0.4em]">Subsurface Scan Mode</span>
          <div className="mt-2 h-[2px] w-32 bg-gradient-to-r from-transparent to-blue-500/40 ml-auto" />
       </div>
 
