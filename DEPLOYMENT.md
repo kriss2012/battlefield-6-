@@ -54,17 +54,23 @@ graph TD
 
 ---
 
-## 3. Core Dependencies & "Engine" Logic
+---
 
-### Engine Components
-- **Neural Forge (Frontend)**: Uses `framer-motion` and `aiService` to simulate high-performance asset synthesis.
-- **AI Analytics (Backend)**: Uses `pg` and custom weighted logic in `aiAnalytics.ts` to generate weapon recommendations.
+## 4. Live Retrieval Engine & Flow
 
-### Key Dependencies
-- **Frontend**: `react`, `framer-motion`, `three.js`, `socket.io-client`.
-- **Backend**: `express`, `pg`, `jsonwebtoken`, `zod`, `helmet`.
+The Battlefield 6 Stats "Engine" operates on a real-time data retrieval architecture:
+
+### Interactive Flow
+1. **Simulation Sequence**: When a user enters the `Simulation` page, the frontend establishes a connection with the backend (via `VITE_BACKEND_URL`).
+2. **State Persistence**: The "Neural Forge" saves mission progress to the `game_saves` table using the `/api/game/save` endpoint.
+3. **Analytics Retrieval**: The `Armory` and `Leaderboard` pages fetch live player metrics using `analyticsApi` and `leaderboardApi`, ensuring that "Mastery Level" and "Global Ranking" reflect real-time database state.
+4. **AI Generation**: The `NeuralForge` utilizes `aiService` to simulate synthetic asset generation, which can be extended with real LLM endpoints by updating the service layer.
+
+### Deployment Hardening
+- **Database**: Ensure the `UNIQUE` constraint on `user_id` in `game_saves` is applied to prevent duplicate record glitches.
+- **CORS**: The backend must include the production frontend URL in its `allowedOrigins` to enable secure data retrieval.
 
 ---
 
 > [!TIP]
-> Use `npm run dev` in both root and `/backend` for local development. For production, ensure all environment variables are correctly mapped for secure cross-origin communication.
+> Use `npm run dev` in both the root and `/backend` directories for local development. For production, ensure all environment variables are correctly mapped for secure cross-origin communication.
