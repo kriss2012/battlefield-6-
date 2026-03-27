@@ -5,7 +5,7 @@ const createTable = async () => {
     await pool.query(`
       CREATE TABLE IF NOT EXISTS game_saves (
         id SERIAL PRIMARY KEY,
-        user_id VARCHAR(255) NOT NULL,
+        user_id VARCHAR(255) NOT NULL UNIQUE,
         current_scene VARCHAR(255) NOT NULL,
         rage INT DEFAULT 0,
         resolve INT DEFAULT 0,
