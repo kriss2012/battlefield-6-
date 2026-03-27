@@ -12,7 +12,6 @@ import {
 } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import { useLocation, useNavigate } from 'react-router-dom';
-import TacticalHUD from '../components/TacticalHUD';
 import * as THREE from 'three';
 import { missions } from '../utils/missionData';
 import { BACKEND_URL } from '../services/api';
@@ -357,7 +356,6 @@ const Simulation: React.FC = () => {
         </Canvas>
 
         {/* HUD Elements */}
-        <TacticalHUD />
 
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
           {/* Crosshair */}
