@@ -1,7 +1,5 @@
 import React from 'react';
 
-import React from 'react';
-
 export interface CharacterLore {
   id: string;
   name: string;
